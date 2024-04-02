@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-AutofixApplication<autofix>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "vicente.mieres.autofix.AutofixApplication",
+      "projectName": "autofix",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
