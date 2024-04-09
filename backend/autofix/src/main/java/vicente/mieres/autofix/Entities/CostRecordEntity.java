@@ -12,21 +12,26 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "brand")
+@Table(name = "cost_record")
 @NoArgsConstructor
 @AllArgsConstructor
-public class BrandEntity {
+public class CostRecordEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
-    private Long brandId;
+    private Long costRecordId;
 
-    private String brandName;
-    private boolean bonus;
-    private int bonusAmount;
-    private int discount;
-    private String period;
+    private Long vehicleId;
 
-    
+    private float repairCost;
+
+    private float kilometerCharge;
+    private float ageCharge;
+    private float lateCharge;
+
+    private float repairsDiscount;
+    private float attentionDayDiscount;
+    private float bonusDiscount;
+
 }

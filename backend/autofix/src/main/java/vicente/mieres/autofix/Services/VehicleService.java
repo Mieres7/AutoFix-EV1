@@ -18,8 +18,9 @@ public class VehicleService {
         return (ArrayList<VehicleEntity>) vehicleRepository.findAll();
     }
 
-    public VehicleEntity getVehicle(Long vehicleId){
-        return vehicleRepository.findById(vehicleId).get();
+    public VehicleEntity getVehicle(Long VehicleId){
+        return vehicleRepository.findById(VehicleId).get();
     }
+    
 
 }

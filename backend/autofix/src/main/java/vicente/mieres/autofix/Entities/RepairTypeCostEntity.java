@@ -17,7 +17,7 @@ public class RepairTypeCostEntity {
     @Column(unique = true, nullable = false)
     private Long repairTypeCostId;
 
-    private String type;
+    private String repairType;
     private String description;
     // All this attributes represents the cost of repair depending on the motor type of the vehicle
     private int gasolineCost;

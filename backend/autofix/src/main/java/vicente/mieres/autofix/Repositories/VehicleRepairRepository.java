@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import vicente.mieres.autofix.Entities.VehicleRepairEntity;
 
 @Repository
-public interface VehicleRepairRepository extends CrudRepository<VehicleRepairEntity, Long>{
+public interface VehicleRepairRepository extends CrudRepository<VehicleRepairEntity, Long>{ 
+
+    public VehicleRepairEntity findByRepairId(Long repairId);
     
 }

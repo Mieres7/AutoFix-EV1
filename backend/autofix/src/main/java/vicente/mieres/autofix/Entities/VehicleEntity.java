@@ -28,4 +28,5 @@ public class VehicleEntity{
 
     private Long brand_id;
 
+
 }

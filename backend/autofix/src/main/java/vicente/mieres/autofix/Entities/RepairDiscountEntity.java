@@ -15,7 +15,7 @@ public class RepairDiscountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
-    private Long repaitDiscountId;
+    private Long repairDiscountId;
 
     private float gasolineCost;
     private float dieselCost;

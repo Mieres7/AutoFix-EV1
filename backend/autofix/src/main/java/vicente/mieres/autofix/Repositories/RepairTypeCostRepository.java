@@ -9,4 +9,5 @@ import vicente.mieres.autofix.Entities.RepairTypeCostEntity;
 @Repository
 public interface RepairTypeCostRepository extends CrudRepository<RepairTypeCostEntity, Long>{
     
+
 }
