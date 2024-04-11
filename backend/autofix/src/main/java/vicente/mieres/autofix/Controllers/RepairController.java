@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vicente.mieres.autofix.DTO.CreateRepair;
 import vicente.mieres.autofix.Proyections.AverageTimeProyection;
+import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
 import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
 import vicente.mieres.autofix.Entities.RepairEntity;
 import vicente.mieres.autofix.Services.RepairService;
@@ -40,9 +41,9 @@ public class RepairController {
         return ResponseEntity.ok(totalCost);
     }
     
-    @GetMapping("/summary")
+    @GetMapping("/summary/type")
     public ResponseEntity<List<RepairVehicleTypeProyection>> getRepairTypeCost() {
-        List<RepairVehicleTypeProyection> repairVehicleTypes = repairService.getRepairVehicleCost();
+        List<RepairVehicleTypeProyection> repairVehicleTypes = repairService.getRepairTypeCost();
         if (repairVehicleTypes.isEmpty()) {
             return ResponseEntity.noContent().build();
             
@@ -57,6 +58,15 @@ public class RepairController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(averageTimeProyections);
+    }
+
+    @GetMapping("/summary/motor")
+    public ResponseEntity<List<RepairVehicleMotorProyection>> getRepairMotorCost(){
+        List<RepairVehicleMotorProyection> repairVehicleMotorProyections = repairService.getRepairMotorCost();
+        if(repairVehicleMotorProyections.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(repairVehicleMotorProyections);
     }
 
     @PutMapping("/{repairId}")

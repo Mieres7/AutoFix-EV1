@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import vicente.mieres.autofix.DTO.CreateRepair;
 import vicente.mieres.autofix.Proyections.AverageTimeProyection;
+import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
 import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
 import vicente.mieres.autofix.Entities.CostRecordEntity;
 import vicente.mieres.autofix.Entities.RepairEntity;
@@ -100,7 +101,6 @@ public class RepairService {
         vehicleRepair.setVehicleId(vehicleId);
         vehicleRepairService.saveVehicleRepair(vehicleRepair);
 
-        
         return newRepair;
     }
 
@@ -195,12 +195,16 @@ public class RepairService {
         return totalCost;
      }
 
-     public List<RepairVehicleTypeProyection> getRepairVehicleCost(){
-        return repairRepository.getRepairVehicleCost();
+     public List<RepairVehicleTypeProyection> getRepairTypeCost(){
+        return repairRepository.getRepairTypeCost();
      }
 
      public List<AverageTimeProyection> getAverageRepairTime(){
         return repairRepository.getAverageRepairTime();
+     }
+
+     public List<RepairVehicleMotorProyection> getRepairMotorCost(){
+        return repairRepository.getRepairMotorCost();
      }
 
 

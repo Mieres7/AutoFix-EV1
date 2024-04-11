@@ -9,5 +9,6 @@ import vicente.mieres.autofix.Entities.VehicleEntity;
 @Repository
 public interface VehicleRepository extends CrudRepository<VehicleEntity, Long>{
     
-    
+    public boolean existsByRegistration(String registration);
+
 }

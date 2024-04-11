@@ -2,6 +2,10 @@ package vicente.mieres.autofix.Proyections;
 
 public interface RepairVehicleTypeProyection {
     String getRepairType();
-    Long getVehicleAmount();
+    Long getSedans();
+    Long getHatchbacks();
+    Long getSuvs();
+    Long getPickups();
+    Long getVans();
     Double getTotalCost();
 }
