@@ -66,10 +66,31 @@ public class RepairControllerTest {
                 
     }
 
-    // @Test
-    // public void getCostRecords_ShouldReturnAllCostRecords() throws Exception{
+    @Test
+    public void getCostRecords_ShouldReturnAllCostRecords() throws Exception{
+        mockMvc.perform(get("/repair/cost/record"))
+            .andExpect(status().isOk());
+    }
 
-    // }
+    @Test
+    public void getRepairTypeCost_ShouldReturnCorrectData() throws Exception {
+        mockMvc.perform(get("/repair/summary/type"))
+            .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void getAverageRepairCost_ShouldReturnCorrectData() throws Exception{
+        mockMvc.perform(get("/repair/average"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getRepairMotorCost_ShouldReturnCorrectData() throws Exception {
+        mockMvc.perform(get("/repair/summary/motor"))
+            .andExpect(status().isOk());
+
+    }
 
     @Test
     public void updateRepair_ShouldReturnUpdatedRepair() throws Exception{

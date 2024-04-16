@@ -155,7 +155,7 @@ public class RepairService {
         // cargo por dia de atraso
         LocalDateTime costumerDateTime = repair.getCostumerDateTime();
         LocalDateTime checkOutDateTime = repair.getCheckOutDateTime();
-        Duration duration = Duration.between(costumerDateTime, checkOutDateTime); // costumer es null 
+        Duration duration = Duration.between(costumerDateTime, checkOutDateTime); 
 
         Long daysBetween = duration.toDays();
 

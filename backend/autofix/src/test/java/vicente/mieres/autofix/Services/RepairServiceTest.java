@@ -100,6 +100,7 @@ public class RepairServiceTest {
 
         assertThat(savedRepair.isBonus()).isTrue();
     }
+    
     @Test
     public void whenSaveRepair_ThenSavedRepairIsCorrectV4() {
         VehicleEntity vehicle = new VehicleEntity();
@@ -165,12 +166,12 @@ public class RepairServiceTest {
         repair.setRepairTypeCostId(1L);
         repair.setBonus(true);
 
-        LocalDateTime chekIn = LocalDateTime.of(2024, 4, 15, 12, 0);
-        LocalDateTime chekOut = LocalDateTime.of(2024, 4, 16, 12, 0);
-        LocalDateTime costumerTime = LocalDateTime.of(2024, 4, 19, 12, 0);
+        LocalDateTime chekIn = LocalDateTime.of(2024, 4, 15, 10, 0, 0);
+        LocalDateTime chekOut = LocalDateTime.of(2024, 4, 16, 10, 0, 0);
+        LocalDateTime costumerTime = LocalDateTime.of(2024, 4, 19, 10, 0, 0);
         repair.setCheckInDateTime(chekIn);
         repair.setCheckOutDateTime(chekOut);
-        repair.setCheckOutDateTime(costumerTime);
+        repair.setCostumerDateTime(costumerTime);
 
         when(repairRepository.findById(1L)).thenReturn(Optional.of(repair));
 
@@ -191,9 +192,12 @@ public class RepairServiceTest {
 
         float totalCost = repairService.getTotalCost(1L);
 
-        assertThat(totalCost).isEqualTo(0.0);
+        assertThat(totalCost).isEqualTo(136850.0f);
 
     }
+
+
+
 
 
 }

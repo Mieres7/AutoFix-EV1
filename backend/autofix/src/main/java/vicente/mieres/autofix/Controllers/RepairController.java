@@ -45,37 +45,24 @@ public class RepairController {
     @GetMapping("/cost/record")
     public ResponseEntity<List<CostRecordProyection>> getCostRecords(){
         List<CostRecordProyection> costRecordProyections = repairService.getCostRecords();
-        if(costRecordProyections.isEmpty()){
-            return ResponseEntity.noContent().build();
-            }
         return ResponseEntity.ok(costRecordProyections);
     }
 
     @GetMapping("/summary/type")
     public ResponseEntity<List<RepairVehicleTypeProyection>> getRepairTypeCost() {
         List<RepairVehicleTypeProyection> repairVehicleTypes = repairService.getRepairTypeCost();
-        if (repairVehicleTypes.isEmpty()) {
-            return ResponseEntity.noContent().build();
-            
-        }
         return ResponseEntity.ok(repairVehicleTypes);
     }
 
     @GetMapping("/average")
     public ResponseEntity<List<AverageTimeProyection>> getAverageRepairCost(){
         List<AverageTimeProyection> averageTimeProyections = repairService.getAverageRepairTime();
-        if (averageTimeProyections.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(averageTimeProyections);
     }
 
     @GetMapping("/summary/motor")
     public ResponseEntity<List<RepairVehicleMotorProyection>> getRepairMotorCost(){
         List<RepairVehicleMotorProyection> repairVehicleMotorProyections = repairService.getRepairMotorCost();
-        if(repairVehicleMotorProyections.isEmpty()){
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(repairVehicleMotorProyections);
     }
 
