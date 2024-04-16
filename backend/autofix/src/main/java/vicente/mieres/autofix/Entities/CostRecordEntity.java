@@ -24,6 +24,7 @@ public class CostRecordEntity {
 
     private Long vehicleId;
 
+    private float repairCostOG;
     private float repairCost;
 
     private float kilometerCharge;

@@ -25,9 +25,10 @@ public class CostRecordService {
         return (ArrayList<CostRecordEntity>) costRecordRepository.findAll();
     }
 
-    public CostRecordEntity setCostRecord(Long costRecordId, float repairValue, float kilometerCharge, float ageCharge, float daysBetweenValue, float repairDiscount, float attentionDayDiscount, float bonusDiscount){
+    public CostRecordEntity setCostRecord(Long costRecordId, float repairValueOG,float repairValue, float kilometerCharge, float ageCharge, float daysBetweenValue, float repairDiscount, float attentionDayDiscount, float bonusDiscount){
         CostRecordEntity costRecord = this.getCostRecord(costRecordId);
 
+        costRecord.setRepairCostOG(repairValueOG);
         costRecord.setAgeCharge(ageCharge);
         costRecord.setAttentionDayDiscount(attentionDayDiscount);
         costRecord.setBonusDiscount(bonusDiscount);

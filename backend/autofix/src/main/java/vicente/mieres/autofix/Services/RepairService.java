@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import vicente.mieres.autofix.DTO.CreateRepair;
 import vicente.mieres.autofix.Proyections.AverageTimeProyection;
+import vicente.mieres.autofix.Proyections.CostRecordProyection;
 import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
 import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
 import vicente.mieres.autofix.Entities.CostRecordEntity;
@@ -76,7 +77,7 @@ public class RepairService {
 
         if(vehicleAge >= 0 && vehicleAge <= 5)
             newRepair.setAgeChargeId(1L);
-        else if(vehicleAge >= 6 && vehicleAge <= 10)
+    else if(vehicleAge >= 6 && vehicleAge <= 10)
             newRepair.setAgeChargeId(2L);
         else if(vehicleAge >= 11 && vehicleAge <= 15)
             newRepair.setAgeChargeId(3L);
@@ -108,43 +109,15 @@ public class RepairService {
         return repairRepository.findById(repairId).get();
     }
 
-    public RepairEntity updateRepair(Long repairId, RepairEntity newRepair){
-        
-        RepairEntity repair = this.getRepair(repairId);
-        
-        if(newRepair.getAgeChargeId() != null)
-            repair.setAgeChargeId(newRepair.getAgeChargeId());
-        if(newRepair.getCheckInDateTime() != null)
-            repair.setCheckInDateTime(newRepair.getCheckInDateTime());
-        if(newRepair.getCheckOutDateTime() != null)
-            repair.setCheckOutDateTime(newRepair.getCheckOutDateTime());
-        if(newRepair.getCostumerDateTime() != null)
-            repair.setCostumerDateTime(newRepair.getCostumerDateTime());
-        if(newRepair.getKilometerChargeId() != null)
-            repair.setKilometerChargeId(newRepair.getKilometerChargeId());
-        if(newRepair.getRepairDiscount() != null)
-            repair.setRepairDiscount(newRepair.getRepairDiscount());
-        if(newRepair.getRepairTypeCostId() != null)
-            repair.setRepairTypeCostId(newRepair.getRepairTypeCostId());
-        if(newRepair.getTotalCost() >= 0)
-            repair.setTotalCost(newRepair.getTotalCost());
-        if(newRepair.getRepairId() != null)
-            repair.setRepairId(newRepair.getRepairId());
-        if(newRepair.isBonus())
-            repair.setBonus(newRepair.isBonus());
-        if (!newRepair.isBonus())
-            repair.setBonus(!newRepair.isBonus());
-        if(newRepair.getCostRecordId() != null)
-            repair.setCostRecordId(newRepair.getCostRecordId());
-
-        return repairRepository.save(repair);
+    public RepairEntity updateRepair(RepairEntity newRepair){
+        return repairRepository.save(newRepair);
     }
 
 
     public float getTotalCost(Long repairId){
 
-        RepairEntity repair = this.repairRepository.findById(repairId).get();
-        VehicleRepairEntity vehicleRepair = vehicleRepairService.getByRepairId(repairId);
+    RepairEntity repair = this.repairRepository.findById(repairId).get();
+    VehicleRepairEntity vehicleRepair = vehicleRepairService.getByRepairId(repairId);
         VehicleEntity vehicle = vehicleService.getVehicle(vehicleRepair.getVehicleId());
 
         String motorType = vehicle.getMotorType();
@@ -187,12 +160,16 @@ public class RepairService {
         Long daysBetween = duration.toDays();
 
         Long costRecordId = repair.getCostRecordId();
-        System.out.println(costRecordId);
+
         float totalCost = repairValueService.getRepairValue(costRecordId, typeCost, repairDiscount, kilometerAgeCharge, bonusDiscount, attentionDayDiscount, daysBetween);
         repair.setTotalCost(totalCost);
         repairRepository.save(repair);
 
         return totalCost;
+     }
+
+     public List<CostRecordProyection> getCostRecords(){
+        return repairRepository.getCostRecords();
      }
 
      public List<RepairVehicleTypeProyection> getRepairTypeCost(){

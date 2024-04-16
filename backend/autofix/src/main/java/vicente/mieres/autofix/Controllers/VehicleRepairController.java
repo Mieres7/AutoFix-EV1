@@ -13,7 +13,7 @@ import vicente.mieres.autofix.Services.VehicleRepairService;
 
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/vehicleRepair")
 @CrossOrigin("*")
 public class VehicleRepairController {
     

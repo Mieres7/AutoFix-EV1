@@ -98,9 +98,12 @@ public class RepairValueService {
             case "PICKUP":
                 kilometerAgeCharge.add(kilometerCharge.getPickupCharge());
                 kilometerAgeCharge.add(ageCharge.getPickupCharge());
+                break;
             case "VAN":
                 kilometerAgeCharge.add(kilometerCharge.getVanCharge());
                 kilometerAgeCharge.add(ageCharge.getVanCharge());
+                break;
+            
         }
         return kilometerAgeCharge;
     }
@@ -122,9 +125,11 @@ public class RepairValueService {
         float kilometerChargeValue = repair * kmCharge;
         float ageChargeValue = repair * ageCharge;
 
-        if( daysBetween < 0) daysBetween = daysBetween * -1;
-        float daysBetweenValue = (float)daysBetween;
-        daysBetweenValue = daysBetween * typeCost * 0.05f;
+        if (daysBetween < 0) {
+            daysBetween = -daysBetween;
+        }
+        
+        float daysBetweenValue = daysBetween * typeCost * 0.05f;
         
        float charges = kilometerChargeValue + ageChargeValue + daysBetweenValue;
 
@@ -137,8 +142,10 @@ public class RepairValueService {
         float discounts = repairDiscountValue + attentionDayDiscountValue + (float) bonusDiscount;
 
         repairValue = (repair + charges - discounts) * 1.19f;
+        
+        costRecordService.setCostRecord(costRecordId, repair,repairValue, kilometerChargeValue, ageChargeValue, daysBetweenValue, repairDiscountValue, attentionDayDiscountValue, bonusDiscount);
 
-        costRecordService.setCostRecord(costRecordId, repairValue, kilometerChargeValue, ageChargeValue, daysBetweenValue, repairDiscountValue, attentionDayDiscountValue, bonusDiscount);
+        repairValue = Math.round(repairValue);
 
         return repairValue; 
     }

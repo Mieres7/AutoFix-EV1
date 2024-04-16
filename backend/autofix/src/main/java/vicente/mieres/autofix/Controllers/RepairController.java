@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vicente.mieres.autofix.DTO.CreateRepair;
 import vicente.mieres.autofix.Proyections.AverageTimeProyection;
+import vicente.mieres.autofix.Proyections.CostRecordProyection;
 import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
 import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
 import vicente.mieres.autofix.Entities.RepairEntity;
@@ -41,6 +42,15 @@ public class RepairController {
         return ResponseEntity.ok(totalCost);
     }
     
+    @GetMapping("/cost/record")
+    public ResponseEntity<List<CostRecordProyection>> getCostRecords(){
+        List<CostRecordProyection> costRecordProyections = repairService.getCostRecords();
+        if(costRecordProyections.isEmpty()){
+            return ResponseEntity.noContent().build();
+            }
+        return ResponseEntity.ok(costRecordProyections);
+    }
+
     @GetMapping("/summary/type")
     public ResponseEntity<List<RepairVehicleTypeProyection>> getRepairTypeCost() {
         List<RepairVehicleTypeProyection> repairVehicleTypes = repairService.getRepairTypeCost();
@@ -69,9 +79,9 @@ public class RepairController {
         return ResponseEntity.ok(repairVehicleMotorProyections);
     }
 
-    @PutMapping("/{repairId}")
-    public ResponseEntity<RepairEntity> upadteRepair(@PathVariable Long repairId, @RequestBody RepairEntity repair){
-        RepairEntity repairUpdated = repairService.updateRepair(repairId, repair);
+    @PutMapping("/")
+    public ResponseEntity<RepairEntity> upadteRepair(@RequestBody RepairEntity repair){
+        RepairEntity repairUpdated = repairService.updateRepair(repair);
         return ResponseEntity.ok(repairUpdated);
     }
 }

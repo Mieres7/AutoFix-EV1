@@ -3,6 +3,7 @@ package vicente.mieres.autofix.Repositories;
 import java.util.List;
 
 import vicente.mieres.autofix.Proyections.AverageTimeProyection;
+import vicente.mieres.autofix.Proyections.CostRecordProyection;
 import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
 import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
 
@@ -14,6 +15,16 @@ import vicente.mieres.autofix.Entities.RepairEntity;
 
 @Repository
 public interface RepairRepository extends CrudRepository<RepairEntity, Long>{
+
+    @Query(value = "SELECT cr.cost_record_id, b.brand_name AS BrandName, v.model AS VehicleModel, v.registration AS Registration, " +
+                    "cr.repair_cost AS RepairCost, cr.kilometer_charge AS KilometerCharge, cr.age_charge AS AgeCharge, cr.late_charge AS LateCharge, " +
+                    "cr.repairs_discount AS RepairsDiscount, cr.attention_day_discount AS AttentionDayDiscount , cr.bonus_discount AS BonusDiscount, cr.repair_costog AS RepairCostOG " +
+                    "FROM cost_record AS cr " +
+                    "JOIN repair AS r ON cr.cost_record_id = r.cost_record_id " +
+                    "JOIN vehicle_repair AS vr ON r.repair_id = vr.repair_id " +
+                    "JOIN vehicle AS v ON vr.vehicle_id = v.vehicle_id " +
+                    "JOIN brand AS b ON v.brand_id = b.brand_id",  nativeQuery = true)
+    List<CostRecordProyection> getCostRecords();
 
     @Query(value = "SELECT RTC.repair_type AS RepairType, " +
                     "SUM(CASE WHEN V.vehicle_type = 'SEDAN' THEN 1 ELSE 0 END) AS Sedans, " +
@@ -54,4 +65,6 @@ public interface RepairRepository extends CrudRepository<RepairEntity, Long>{
                    "GROUP BY RTC.repair_type " +
                    "ORDER BY TotalCost DESC", nativeQuery = true)
     List<RepairVehicleMotorProyection> getRepairMotorCost();
+
+
 }
