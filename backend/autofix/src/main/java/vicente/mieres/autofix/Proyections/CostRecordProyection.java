@@ -13,6 +13,4 @@ public interface CostRecordProyection {
     Double getAttentionDayDiscount();
     Double getBonusDiscount();
     Double getRepairCostOG();
-
-    
 }
