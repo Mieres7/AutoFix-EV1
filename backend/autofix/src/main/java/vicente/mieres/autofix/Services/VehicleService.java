@@ -31,8 +31,6 @@ public class VehicleService {
         if(registration.matches(expression)){
             if(!vehicleRepository.existsByRegistration(registration))
                 newVehicle.setRegistration(registration);
-        }else{
-            throw new Exception("Registration format not valid");
         }
 
         return vehicleRepository.save(newVehicle);

@@ -7,11 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import vicente.mieres.autofix.DTO.CreateRepair;
-import vicente.mieres.autofix.Proyections.AverageTimeProyection;
-import vicente.mieres.autofix.Proyections.CostRecordProyection;
-import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
-import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
 import vicente.mieres.autofix.Entities.CostRecordEntity;
 import vicente.mieres.autofix.Entities.RepairEntity;
 import vicente.mieres.autofix.Entities.VehicleEntity;
@@ -95,6 +92,8 @@ public class RepairService {
         newRepair.setCostRecordId(costRecordId);
 
         newRepair = repairRepository.save(newRepair);
+        System.out.println(newRepair.getRepairId());
+
 
         VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
         Long repairId = newRepair.getRepairId();
@@ -102,15 +101,43 @@ public class RepairService {
         vehicleRepair.setVehicleId(vehicleId);
         vehicleRepairService.saveVehicleRepair(vehicleRepair);
 
-        return newRepair;
+        return repairRepository.save(newRepair);
     }
 
     public RepairEntity getRepair(Long repairId){
         return repairRepository.findById(repairId).get();
     }
 
-    public RepairEntity updateRepair(RepairEntity newRepair){
-        return repairRepository.save(newRepair);
+    public RepairEntity updateRepair(Long repairId, RepairEntity newRepair){
+
+        RepairEntity repair = this.getRepair(repairId);
+
+        if(newRepair.getAgeChargeId() != null)
+            repair.setAgeChargeId(newRepair.getAgeChargeId());
+        if(newRepair.getCheckInDateTime() != null)
+            repair.setCheckInDateTime(newRepair.getCheckInDateTime());
+        if(newRepair.getCheckOutDateTime() != null)
+            repair.setCheckOutDateTime(newRepair.getCheckOutDateTime());
+        if(newRepair.getCostumerDateTime() != null)
+            repair.setCostumerDateTime(newRepair.getCostumerDateTime());
+        if(newRepair.getKilometerChargeId() != null)
+            repair.setKilometerChargeId(newRepair.getKilometerChargeId());
+        if(newRepair.getRepairDiscount() != null)
+            repair.setRepairDiscount(newRepair.getRepairDiscount());
+        if(newRepair.getRepairTypeCostId() != null)
+            repair.setRepairTypeCostId(newRepair.getRepairTypeCostId());
+        if(newRepair.getTotalCost() >= 0.0f)
+            repair.setTotalCost(newRepair.getTotalCost());
+        if(newRepair.getRepairId() != null)
+            repair.setRepairId(newRepair.getRepairId());
+        if(newRepair.isBonus())
+            repair.setBonus(newRepair.isBonus());
+        if (!newRepair.isBonus())
+            repair.setBonus(!newRepair.isBonus());
+        if(newRepair.getCostRecordId() != null)
+            repair.setCostRecordId(newRepair.getCostRecordId());
+
+        return repairRepository.save(repair);
     }
 
 
@@ -168,21 +195,21 @@ public class RepairService {
         return totalCost;
      }
 
-     public List<CostRecordProyection> getCostRecords(){
+    public List<Object[]> getCostRecords(){
         return repairRepository.getCostRecords();
-     }
+    }
 
-     public List<RepairVehicleTypeProyection> getRepairTypeCost(){
-        return repairRepository.getRepairTypeCost();
-     }
+    public List<Object[]> getRepairTypeCost(){
+         return repairRepository.getRepairTypeCost();
+    }
 
-     public List<AverageTimeProyection> getAverageRepairTime(){
-        return repairRepository.getAverageRepairTime();
-     }
+    public List<Object[]> getAverageRepairTime(){
+         return repairRepository.getAverageRepairTime();
+    }
 
-     public List<RepairVehicleMotorProyection> getRepairMotorCost(){
-        return repairRepository.getRepairMotorCost();
-     }
+    public List<Object[]> getRepairMotorCost(){
+         return repairRepository.getRepairMotorCost();
+    }
 
 
 }

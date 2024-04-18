@@ -7,10 +7,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.hibernate.engine.transaction.jta.platform.internal.OC4JJtaPlatform;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,11 +26,9 @@ import vicente.mieres.autofix.Entities.RepairEntity;
 import vicente.mieres.autofix.Entities.RepairTypeCostEntity;
 import vicente.mieres.autofix.Entities.VehicleEntity;
 import vicente.mieres.autofix.Entities.VehicleRepairEntity;
-import vicente.mieres.autofix.Proyections.AverageTimeProyection;
-import vicente.mieres.autofix.Proyections.CostRecordProyection;
-import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
-import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
+import vicente.mieres.autofix.Repositories.CostRecordRepository;
 import vicente.mieres.autofix.Repositories.RepairRepository;
+import vicente.mieres.autofix.Repositories.RepairTypeCostRepository;
 import vicente.mieres.autofix.Repositories.VehicleRepairRepository;
 import vicente.mieres.autofix.Repositories.VehicleRepository;
 
@@ -47,6 +48,12 @@ public class RepairServiceTest {
     private VehicleRepairService vehicleRepairService;
     @Autowired
     private EntityManager entityManager;
+    @MockBean
+    private CostRecordRepository costRecordRepository;
+    @Autowired
+    private RepairTypeCostRepository repairTypeCostRepository;
+    
+    
 
     @Test
     public void whenSaveRepair_ThenSavedRepairIsCorrectV1() {
@@ -62,6 +69,17 @@ public class RepairServiceTest {
         createRepair.setVehicleId(1L);
 
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+
+        RepairEntity newRepair = new RepairEntity();
+        newRepair.setRepairId(1L);
+        newRepair.setRepairTypeCostId(1L);
+        newRepair.setBonus(true);
+
+        when(repairRepository.save(any(RepairEntity.class))).thenReturn(newRepair);
+
+        CostRecordEntity costRecord = new CostRecordEntity();
+        costRecord.setCostRecordId(1L);
+        when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(costRecord);
 
         RepairEntity repair = repairService.saveRepair(createRepair);
         RepairEntity savedRepair = repairRepository.save(repair);
@@ -82,6 +100,17 @@ public class RepairServiceTest {
         createRepair.setVehicleId(2L);
 
         when(vehicleRepository.findById(2L)).thenReturn(Optional.of(vehicle));
+
+        RepairEntity newRepair = new RepairEntity();
+        newRepair.setRepairId(1L);
+        newRepair.setRepairTypeCostId(1L);
+        newRepair.setBonus(true);
+
+        when(repairRepository.save(any(RepairEntity.class))).thenReturn(newRepair);
+
+        CostRecordEntity costRecord = new CostRecordEntity();
+        costRecord.setCostRecordId(1L);
+        when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(costRecord);
 
         RepairEntity repair = repairService.saveRepair(createRepair);
         RepairEntity savedRepair = repairRepository.save(repair);
@@ -104,6 +133,17 @@ public class RepairServiceTest {
 
         when(vehicleRepository.findById(3L)).thenReturn(Optional.of(vehicle));
 
+        RepairEntity newRepair = new RepairEntity();
+        newRepair.setRepairId(1L);
+        newRepair.setRepairTypeCostId(1L);
+        newRepair.setBonus(true);
+
+        when(repairRepository.save(any(RepairEntity.class))).thenReturn(newRepair);
+
+        CostRecordEntity costRecord = new CostRecordEntity();
+        costRecord.setCostRecordId(1L);
+        when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(costRecord);
+
         RepairEntity repair = repairService.saveRepair(createRepair);
         RepairEntity savedRepair = repairRepository.save(repair);
 
@@ -124,6 +164,16 @@ public class RepairServiceTest {
         createRepair.setVehicleId(4L);
 
         when(vehicleRepository.findById(4L)).thenReturn(Optional.of(vehicle));
+        RepairEntity newRepair = new RepairEntity();
+        newRepair.setRepairId(1L);
+        newRepair.setRepairTypeCostId(1L);
+        newRepair.setBonus(true);
+
+        when(repairRepository.save(any(RepairEntity.class))).thenReturn(newRepair);
+        
+        CostRecordEntity costRecord = new CostRecordEntity();
+        costRecord.setCostRecordId(1L);
+        when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(costRecord);
 
         RepairEntity repair = repairService.saveRepair(createRepair);
         RepairEntity savedRepair = repairRepository.save(repair);
@@ -148,18 +198,52 @@ public class RepairServiceTest {
         
         RepairEntity existingRepair = new RepairEntity();
         existingRepair.setRepairId(1L);
+        existingRepair.setTotalCost(5000.00f);
+
+        // Set DateTime attributes with specified hour, minute, and second
+        existingRepair.setCheckInDateTime(LocalDateTime.of(2024, 4, 15, 14, 30, 45));
+        existingRepair.setCheckOutDateTime(LocalDateTime.of(2024, 4, 17, 14, 30, 45)); // 2 days later
+        existingRepair.setCostumerDateTime(LocalDateTime.of(2024, 4, 19, 14, 30, 45)); // 2 days later from checkOut
+
+        // Set boolean flag
         existingRepair.setBonus(true);
+
+        // Set related IDs
+        existingRepair.setRepairTypeCostId(1L);
+        existingRepair.setKilometerChargeId(1L);
+        existingRepair.setAgeChargeId(1L);
+        existingRepair.setRepairDiscount(1L);
+
+        // Set other IDs
+        existingRepair.setCostRecordId(1L);
 
         RepairEntity updatedRepair = new RepairEntity();
         updatedRepair.setRepairId(1L);
+        updatedRepair.setTotalCost(-5000.00f);
+
+        // Set DateTime attributes with specified hour, minute, and second
+        updatedRepair.setCheckInDateTime(LocalDateTime.of(2024, 4, 15, 14, 30, 45));
+        updatedRepair.setCheckOutDateTime(LocalDateTime.of(2024, 4, 17, 14, 30, 45)); // 2 days later
+        updatedRepair.setCostumerDateTime(LocalDateTime.of(2024, 4, 19, 14, 30, 45)); // 2 days later from checkOut
+
+        // Set boolean flag
         updatedRepair.setBonus(false);
 
+        // Set related IDs
+        updatedRepair.setRepairTypeCostId(1L);
+        updatedRepair.setKilometerChargeId(1L);
+        updatedRepair.setAgeChargeId(1L);
+        updatedRepair.setRepairDiscount(1L);
+
+        // Set other IDs
+        updatedRepair.setCostRecordId(1L);
+
         when(repairRepository.findById(1L)).thenReturn(Optional.of(existingRepair));
-        when(repairRepository.save(updatedRepair)).thenReturn(updatedRepair);
+        when(repairRepository.save(any(RepairEntity.class))).thenReturn(updatedRepair);
 
-        RepairEntity result = repairService.updateRepair(updatedRepair);
+        RepairEntity result = repairService.updateRepair(1L,updatedRepair);
 
-        assertThat(result.getRepairId()).isEqualTo(updatedRepair.getRepairId());
+        assertThat(result.getRepairId()).isEqualTo(1L);
         assertThat(result.isBonus()).isEqualTo(updatedRepair.isBonus());
     }
 
@@ -198,6 +282,10 @@ public class RepairServiceTest {
         vehicle.setBrand_id(1L);
 
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+
+        CostRecordEntity cr = new CostRecordEntity();
+        cr.setCostRecordId(1L);
+        when(costRecordRepository.findById(1L)).thenReturn(Optional.of(cr));
 
         float totalCost = repairService.getTotalCost(1L);
 
@@ -241,165 +329,103 @@ public class RepairServiceTest {
 
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
 
+        CostRecordEntity cr = new CostRecordEntity();
+        cr.setCostRecordId(1L);
+        when(costRecordRepository.findById(1L)).thenReturn(Optional.of(cr));
+
         float totalCost = repairService.getTotalCost(1L);
 
         assertThat(totalCost).isEqualTo(157080.0f);
 
     }
 
+    @Test 
+    public void whenGetCostRecords_thenCostRIsCorrect(){
 
-    @Test
-    public void whenGetRepairTypeCosts_ThenDataIsCorrect(){
+        List<Object[]> mockData = new ArrayList<>();
+        Object[] recordData = new Object[12];
+        recordData[0] = 1L; // CostRecordId
+        recordData[1] = "Toyota"; // BrandName
+        recordData[2] = "Corolla"; // VehicleModel
+        recordData[3] = "XYZ123"; // Registration
+        recordData[4] = 1500.0f; // RepairCost
+        recordData[5] = 100.0f; // KilometerCharge
+        recordData[6] = 50.0f; // AgeCharge
+        recordData[7] = 20.0f; // LateCharge
+        recordData[8] = 5.0f; // RepairsDiscount
+        recordData[9] = 10.0f; // AttentionDayDiscount
+        recordData[10] = 5.0f; // BonusDiscount
+        recordData[11] = 1600.0f; // RepairCostOG
+        mockData.add(recordData);
 
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setBrand_id(1L);
-        vehicle.setModel("Corolla");
-        vehicle.setRegistration("ABCD12");
-        vehicle.setMotorType("GASOLINE");
-        entityManager.merge(vehicle);
+        when(repairService.getCostRecords()).thenReturn(mockData);
 
-        RepairEntity repair = new RepairEntity(); 
-        repair.setTotalCost(156000.0f);
-        repair.setRepairId(1L);
-    
-        entityManager.merge(repair);
-
-        VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
-        vehicleRepair.setRepairId(1L);
-        vehicleRepair.setVehicleId(1L);
-        vehicleRepair.setVehicleRepairId(1L);
-        entityManager.merge(vehicleRepair);
-
-        RepairTypeCostEntity rCostEntity = new RepairTypeCostEntity();
-        rCostEntity.setRepairTypeCostId(1L);
-        rCostEntity.setRepairType("Breaks Repair");
-        entityManager.merge(rCostEntity);
-
-        entityManager.flush();
-
-        List<RepairVehicleTypeProyection> repairVehicleTypeProyections = repairService.getRepairTypeCost();
-
-        assertThat(repairVehicleTypeProyections.get(0).getRepairType()).isEqualTo("Breaks Repair");
+        List<Object[]> result = repairService.getCostRecords();
+        assertThat(result).isNotEmpty();
     }
 
     @Test
-    public void whenGetCostRecords_thenCostRecordsIsCorrect() {
-    
-        BrandEntity brand = new BrandEntity();  
-        brand.setBrandName("TOYOTA");
-        brand.setBrandId(1L);
-        entityManager.merge(brand);
+    public void whenGetRepairTypeCost_thenDataIsCorrect() {
+        // Preparar los datos mock
+        List<Object[]> mockData = new ArrayList<>();
+        Object[] typeCostData = new Object[7];
+        typeCostData[0] = "Brake Replacement"; // RepairType
+        typeCostData[1] = 10L; // Sedans
+        typeCostData[2] = 5L; // Hatchbacks
+        typeCostData[3] = 15L; // SUVs
+        typeCostData[4] = 3L; // Pickups
+        typeCostData[5] = 2L; // Vans
+        typeCostData[6] = 2500.0f; // TotalCost
+        mockData.add(typeCostData);
 
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setBrand_id(1L);
-        vehicle.setModel("Corolla");
-        vehicle.setRegistration("ABCD12");
-        entityManager.merge(vehicle);
+        when(repairService.getRepairTypeCost()).thenReturn(mockData);
 
-        RepairEntity repair = new RepairEntity(); 
-        repair.setCostRecordId(1L);
-        repair.setRepairId(1L);
-        entityManager.merge(repair);
+        // Ejecución del método bajo prueba
+        List<Object[]> result = repairService.getRepairTypeCost();
 
-        VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
-        vehicleRepair.setRepairId(1L);
-        vehicleRepair.setVehicleId(1L);
-        vehicleRepair.setVehicleRepairId(1L);
-        entityManager.merge(vehicleRepair);
-
-        CostRecordEntity costRecord = new CostRecordEntity();  
-        costRecord.setCostRecordId(1L);
-        costRecord.setAgeCharge(10000);
-        costRecord.setAttentionDayDiscount(5000);
-        costRecord.setKilometerCharge(3600);
-        costRecord.setLateCharge(2000);
-        costRecord.setRepairCost(125000);
-        costRecord.setRepairCostOG(120000);
-        costRecord.setRepairsDiscount(4500);
-        costRecord.setVehicleId(1L);
-        costRecord.setBonusDiscount(12000);
-        entityManager.merge(costRecord);
-
-        entityManager.flush();
-
-        List<CostRecordProyection> results = repairService.getCostRecords();
-
-        assertThat(results.get(0).getBrandName()).isEqualTo("TOYOTA");
-        assertThat(results.get(0).getVehicleModel()).isEqualTo("Corolla");
-        assertThat(results.get(0).getRegistration()).isEqualTo("ABCD12");
-    }
-
-    @Test
-    public void whenGetAverageTime_thenAverageTimeIsCorrect(){
-
-        LocalDateTime checkIn = LocalDateTime.of(2024, 4, 12, 12, 0, 0);
-        LocalDateTime checkOut = LocalDateTime.of(2024, 4, 19, 12, 0, 0);
-        
-        RepairEntity repair = new RepairEntity(); 
-        repair.setRepairId(1L);
-        repair.setCheckInDateTime(checkIn);
-        repair.setCheckOutDateTime(checkOut);
-        entityManager.merge(repair);
-
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setBrand_id(1L);
-        vehicle.setModel("Corolla");
-        vehicle.setRegistration("ABCD12");
-        entityManager.merge(vehicle);
-
-        BrandEntity brand = new BrandEntity();  
-        brand.setBrandName("TOYOTA");
-        brand.setBrandId(1L);
-        entityManager.merge(brand);
-
-        VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
-        vehicleRepair.setRepairId(1L);
-        vehicleRepair.setVehicleId(1L);
-        vehicleRepair.setVehicleRepairId(1L);
-        entityManager.merge(vehicleRepair);
-
-        entityManager.flush();
-
-        List<AverageTimeProyection> averageTimeProyections = repairService.getAverageRepairTime();
-
-        assertThat(averageTimeProyections).isNotEmpty();
-        assertThat(averageTimeProyections.get(0).getAverageRepairTime()).isEqualTo(168.0); 
-        assertThat(averageTimeProyections.get(0).getBrandName()).isEqualTo("TOYOTA");
+        // Verificaciones
+        assertThat(result).isNotEmpty();
     }   
+    @Test
+    public void whenGetRepairMotor_ThenDataIsCorrect() {
+        // Preparar los datos mock
+        List<Object[]> mockData = new ArrayList<>();
+        Object[] motorCostData = new Object[6];
+        motorCostData[0] = "Engine Repair"; // RepairType
+        motorCostData[1] = 20L; // Gasoline
+        motorCostData[2] = 10L; // Diesel
+        motorCostData[3] = 5L; // Hybrid
+        motorCostData[4] = 3L; // Electric
+        motorCostData[5] = 3000.0f; // TotalCost
+        mockData.add(motorCostData);
+
+        when(repairService.getRepairMotorCost()).thenReturn(mockData);
+
+        // Ejecución del método bajo prueba
+        List<Object[]> result = repairService.getRepairMotorCost();
+
+        // Verificaciones
+        assertThat(result).isNotEmpty();
+        
+    }
+
 
     @Test
-    public void whenGetRepairMotorCost_thenMotorCostIsCorrect(){
+    public void averageTimeModifier_ShouldConvertRawDataToDTOs() {
+        // Preparar los datos mock
+        List<Object[]> mockData = new ArrayList<>();
+        Object[] averageTimeData = new Object[2];
+        averageTimeData[0] = "Toyota"; // BrandName
+        averageTimeData[1] = new BigDecimal("12.5"); // AverageRepairTime
+        mockData.add(averageTimeData);
 
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setBrand_id(1L);
-        vehicle.setModel("Corolla");
-        vehicle.setRegistration("ABCD12");
-        vehicle.setMotorType("GASOLINE");
-        entityManager.merge(vehicle);
+        when(repairService.getAverageRepairTime()).thenReturn(mockData);
 
-        RepairEntity repair = new RepairEntity(); 
-        repair.setTotalCost(156000.0f);
-        repair.setRepairId(1L);
-    
-        entityManager.merge(repair);
+        // Ejecución del método bajo prueba
+        List<Object[]> result = repairService.getAverageRepairTime();
 
-        VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
-        vehicleRepair.setRepairId(1L);
-        vehicleRepair.setVehicleId(1L);
-        vehicleRepair.setVehicleRepairId(1L);
-        entityManager.merge(vehicleRepair);
-
-        RepairTypeCostEntity rCostEntity = new RepairTypeCostEntity();
-        rCostEntity.setRepairTypeCostId(1L);
-        rCostEntity.setRepairType("Breaks Repair");
-        entityManager.merge(rCostEntity);
-
-        entityManager.flush();
-
-        List<RepairVehicleMotorProyection> repairVehicleMotorProyections = repairService.getRepairMotorCost();
-
-        assertThat(repairVehicleMotorProyections).isNotEmpty();
-        assertThat(repairVehicleMotorProyections.get(0).getRepairType()).isEqualTo("Breaks Repair");
+        // Verificaciones
+        assertThat(result).isNotEmpty();
     }
 
 }

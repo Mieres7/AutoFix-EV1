@@ -18,6 +18,7 @@ import vicente.mieres.autofix.Services.RepairService;
 
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -67,39 +68,13 @@ public class RepairControllerTest {
     }
 
     @Test
-    public void getCostRecords_ShouldReturnAllCostRecords() throws Exception{
-        mockMvc.perform(get("/repair/cost/record"))
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    public void getRepairTypeCost_ShouldReturnCorrectData() throws Exception {
-        mockMvc.perform(get("/repair/summary/type"))
-            .andExpect(status().isOk());
-
-    }
-
-    @Test
-    public void getAverageRepairCost_ShouldReturnCorrectData() throws Exception{
-        mockMvc.perform(get("/repair/average"))
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    public void getRepairMotorCost_ShouldReturnCorrectData() throws Exception {
-        mockMvc.perform(get("/repair/summary/motor"))
-            .andExpect(status().isOk());
-
-    }
-
-    @Test
     public void updateRepair_ShouldReturnUpdatedRepair() throws Exception{
 
         LocalDateTime saveDateTime = LocalDateTime.of(2024,4,12,12,0);
 
         RepairEntity updateRepair = new RepairEntity(1L, 0, saveDateTime, null, null, true, 1L, 2L, 1L, 1L, 2L);
-       
-        given(repairService.updateRepair(Mockito.any(RepairEntity.class))).willReturn(updateRepair);
+    
+        given(repairService.updateRepair(eq(1L), Mockito.any(RepairEntity.class))).willReturn(updateRepair);
 
         String repairJson = """
                 {
@@ -117,7 +92,7 @@ public class RepairControllerTest {
                 }
                 """;
 
-        mockMvc.perform(put("/repair/", 1L)
+        mockMvc.perform(put("/repair/1" )
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(repairJson))
                 .andExpect(status().isOk());

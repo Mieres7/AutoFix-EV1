@@ -142,13 +142,14 @@ public class RepairValueService {
         float discounts = repairDiscountValue + attentionDayDiscountValue + (float) bonusDiscount;
 
         repairValue = (repair + charges - discounts) * 1.19f;
-        
+
         costRecordService.setCostRecord(costRecordId, repair,repairValue, kilometerChargeValue, ageChargeValue, daysBetweenValue, repairDiscountValue, attentionDayDiscountValue, bonusDiscount);
 
         repairValue = Math.round(repairValue);
 
         return repairValue; 
     }
+
 
 }
 

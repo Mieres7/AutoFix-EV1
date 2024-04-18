@@ -5,17 +5,22 @@ package vicente.mieres.autofix.Services;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.Entities.BrandEntity;
+import vicente.mieres.autofix.Entities.CostRecordEntity;
+import vicente.mieres.autofix.Repositories.CostRecordRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 @SpringBootTest
@@ -26,6 +31,8 @@ class RepairValueServiceTest {
     private RepairValueService repairValueService;
     @Autowired
     private EntityManager entityManager;
+    @MockBean
+    private CostRecordRepository costRecordRepository;
     
     
     @Test
@@ -122,7 +129,10 @@ class RepairValueServiceTest {
     @Test
     public void whenGetRepairValue_ThenValueIsCorrect(){
 
-        Long costRecordId = 1L;
+        CostRecordEntity cr = new CostRecordEntity();
+        cr.setCostRecordId(1L);
+        when(costRecordRepository.findById(1L)).thenReturn(Optional.of(cr));
+
         int typeCost = 120000;
         float repairDiscount = 0.02f;
         List<Float> kilometerAgeCharge = Arrays.asList(0.05f, 0.03f); // 5% and 3%
@@ -131,7 +141,7 @@ class RepairValueServiceTest {
         boolean attentionDayDiscount = true;
         Long daysBetween = -10L; 
 
-        float repairValue = repairValueService.getRepairValue(costRecordId, typeCost, repairDiscount, kilometerAgeCharge, bonusDiscount, attentionDayDiscount, daysBetween);
+        float repairValue = repairValueService.getRepairValue(cr.getCostRecordId(), typeCost, repairDiscount, kilometerAgeCharge, bonusDiscount, attentionDayDiscount, daysBetween);
 
         assertThat(repairValue).isEqualTo(200158.0f);
     }
@@ -139,7 +149,10 @@ class RepairValueServiceTest {
     @Test
     public void whenGetRepairValue_ThenValueIsCorrectV2(){
 
-        Long costRecordId = 1L;
+        CostRecordEntity cr = new CostRecordEntity();
+        cr.setCostRecordId(1L);
+        when(costRecordRepository.findById(1L)).thenReturn(Optional.of(cr));
+        
         int typeCost = 120000;
         float repairDiscount = 0.02f;
         List<Float> kilometerAgeCharge = Arrays.asList(0.05f, 0.03f); // 5% and 3%
@@ -148,7 +161,7 @@ class RepairValueServiceTest {
         boolean attentionDayDiscount = false;
         Long daysBetween = -10L; 
 
-        float repairValue = repairValueService.getRepairValue(costRecordId, typeCost, repairDiscount, kilometerAgeCharge, bonusDiscount, attentionDayDiscount, daysBetween);
+        float repairValue = repairValueService.getRepairValue(cr.getCostRecordId(), typeCost, repairDiscount, kilometerAgeCharge, bonusDiscount, attentionDayDiscount, daysBetween);
 
         assertThat(repairValue).isEqualTo(214438.0f);
     }

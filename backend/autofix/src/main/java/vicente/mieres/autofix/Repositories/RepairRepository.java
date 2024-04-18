@@ -2,11 +2,6 @@ package vicente.mieres.autofix.Repositories;
 
 import java.util.List;
 
-import vicente.mieres.autofix.Proyections.AverageTimeProyection;
-import vicente.mieres.autofix.Proyections.CostRecordProyection;
-import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
-import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -24,7 +19,7 @@ public interface RepairRepository extends CrudRepository<RepairEntity, Long>{
                    "JOIN \"vehicle_repair\" AS vr ON r.\"repair_id\" = vr.\"repair_id\" " +
                    "JOIN \"vehicle\" AS v ON vr.\"vehicle_id\" = v.\"vehicle_id\" " +
                    "JOIN \"brand\" AS b ON v.\"brand_id\" = b.\"brand_id\"", nativeQuery = true)
-    List<CostRecordProyection> getCostRecords();
+    List<Object[]> getCostRecords();
 
     @Query(value = "SELECT \"RTC\".\"repair_type\" AS RepairType, " +
                    "SUM(CASE WHEN \"V\".\"vehicle_type\" = 'SEDAN' THEN 1 ELSE 0 END) AS Sedans, " +
@@ -39,7 +34,7 @@ public interface RepairRepository extends CrudRepository<RepairEntity, Long>{
                    "LEFT JOIN \"vehicle\" \"V\" ON \"VR\".\"vehicle_id\" = \"V\".\"vehicle_id\" " + 
                    "GROUP BY \"RTC\".\"repair_type\" " +
                    "ORDER BY TotalCost DESC", nativeQuery = true)
-    List<RepairVehicleTypeProyection> getRepairTypeCost();
+    List<Object[]> getRepairTypeCost();
 
     @Query(value = "SELECT \"b\".\"brand_name\" AS BrandName, " +
                    "AVG(EXTRACT(EPOCH FROM (\"r\".\"check_out_date_time\" - \"r\".\"check_in_date_time\"))/3600) AS AverageRepairTime " +
@@ -49,7 +44,7 @@ public interface RepairRepository extends CrudRepository<RepairEntity, Long>{
                    "JOIN \"brand\" \"b\" ON \"v\".\"brand_id\" = \"b\".\"brand_id\" " +
                    "GROUP BY \"b\".\"brand_name\" " +
                    "ORDER BY AverageRepairTime ASC", nativeQuery = true)
-    List<AverageTimeProyection> getAverageRepairTime();
+    List<Object[]> getAverageRepairTime();
 
     @Query(value = "SELECT \"RTC\".\"repair_type\" AS RepairType, " +
                 "SUM(CASE WHEN \"V\".\"motor_type\" = 'GASOLINE' THEN 1 ELSE 0 END) AS Gasoline, " +
@@ -63,7 +58,7 @@ public interface RepairRepository extends CrudRepository<RepairEntity, Long>{
                 "LEFT JOIN \"vehicle\" \"V\" ON \"VR\".\"vehicle_id\" = \"V\".\"vehicle_id\" " +
                 "GROUP BY \"RTC\".\"repair_type\" " +
                 "ORDER BY TotalCost DESC", nativeQuery = true)
-    List<RepairVehicleMotorProyection> getRepairMotorCost();
+    List<Object[]> getRepairMotorCost();
 
 
 }

@@ -1,20 +1,16 @@
 package vicente.mieres.autofix.Controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import vicente.mieres.autofix.DTO.CreateRepair;
-import vicente.mieres.autofix.Proyections.AverageTimeProyection;
-import vicente.mieres.autofix.Proyections.CostRecordProyection;
-import vicente.mieres.autofix.Proyections.RepairVehicleMotorProyection;
-import vicente.mieres.autofix.Proyections.RepairVehicleTypeProyection;
 import vicente.mieres.autofix.Entities.RepairEntity;
 import vicente.mieres.autofix.Services.RepairService;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,34 +37,10 @@ public class RepairController {
         float totalCost = repairService.getTotalCost(repairId);
         return ResponseEntity.ok(totalCost);
     }
-    
-    @GetMapping("/cost/record")
-    public ResponseEntity<List<CostRecordProyection>> getCostRecords(){
-        List<CostRecordProyection> costRecordProyections = repairService.getCostRecords();
-        return ResponseEntity.ok(costRecordProyections);
-    }
 
-    @GetMapping("/summary/type")
-    public ResponseEntity<List<RepairVehicleTypeProyection>> getRepairTypeCost() {
-        List<RepairVehicleTypeProyection> repairVehicleTypes = repairService.getRepairTypeCost();
-        return ResponseEntity.ok(repairVehicleTypes);
-    }
-
-    @GetMapping("/average")
-    public ResponseEntity<List<AverageTimeProyection>> getAverageRepairCost(){
-        List<AverageTimeProyection> averageTimeProyections = repairService.getAverageRepairTime();
-        return ResponseEntity.ok(averageTimeProyections);
-    }
-
-    @GetMapping("/summary/motor")
-    public ResponseEntity<List<RepairVehicleMotorProyection>> getRepairMotorCost(){
-        List<RepairVehicleMotorProyection> repairVehicleMotorProyections = repairService.getRepairMotorCost();
-        return ResponseEntity.ok(repairVehicleMotorProyections);
-    }
-
-    @PutMapping("/")
-    public ResponseEntity<RepairEntity> upadteRepair(@RequestBody RepairEntity repair){
-        RepairEntity repairUpdated = repairService.updateRepair(repair);
+    @PutMapping("/{repairId}")
+    public ResponseEntity<RepairEntity> upadteRepair(@PathVariable Long repairId, @RequestBody RepairEntity repair){
+        RepairEntity repairUpdated = repairService.updateRepair(repairId, repair);
         return ResponseEntity.ok(repairUpdated);
     }
 }

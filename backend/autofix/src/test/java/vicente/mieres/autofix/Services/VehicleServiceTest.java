@@ -33,10 +33,14 @@ public class VehicleServiceTest {
     @Test
     public void whenSaveVehicle_ThenVehicleSaveIsCorrect() throws Exception{
 
+        VehicleEntity vehicle = new VehicleEntity();
+        vehicle.setVehicleId(1L);
+        vehicle.setRegistration("ABCD12");
+
         CreateVehicle vehicleData = new CreateVehicle("ABCD12", "Corolla", "SEDAN", "2024", "GASOLINE", 5, 5000, 1L);
-        
+        when(vehicleRepository.save(any(VehicleEntity.class))).thenReturn(vehicle);
+
         VehicleEntity savedVehicle = vehicleService.saveVehicle(vehicleData);
-        when(vehicleRepository.save(savedVehicle)).thenReturn(savedVehicle);
         
         assertThat(savedVehicle.getRegistration()).isEqualTo("ABCD12");
         verify(vehicleRepository, times(1)).save(any(VehicleEntity.class));
