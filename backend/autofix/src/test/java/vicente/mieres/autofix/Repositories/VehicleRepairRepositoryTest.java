@@ -4,12 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.Entities.VehicleRepairEntity;
 
-@DataJpaTest
+@SpringBootTest
+@Transactional
+@ActiveProfiles("test")
 public class VehicleRepairRepositoryTest {
     @Autowired
     private VehicleRepairRepository vehicleRepairRepository;

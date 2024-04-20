@@ -13,22 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.engine.transaction.jta.platform.internal.OC4JJtaPlatform;
+import javax.swing.text.html.Option;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.DTO.CreateRepair;
+import vicente.mieres.autofix.Entities.AgeChargeEntity;
 import vicente.mieres.autofix.Entities.BrandEntity;
 import vicente.mieres.autofix.Entities.CostRecordEntity;
+import vicente.mieres.autofix.Entities.KilometerChargeEntity;
+import vicente.mieres.autofix.Entities.RepairDiscountEntity;
 import vicente.mieres.autofix.Entities.RepairEntity;
 import vicente.mieres.autofix.Entities.RepairTypeCostEntity;
 import vicente.mieres.autofix.Entities.VehicleEntity;
 import vicente.mieres.autofix.Entities.VehicleRepairEntity;
 import vicente.mieres.autofix.Repositories.CostRecordRepository;
 import vicente.mieres.autofix.Repositories.RepairRepository;
-import vicente.mieres.autofix.Repositories.RepairTypeCostRepository;
 import vicente.mieres.autofix.Repositories.VehicleRepairRepository;
 import vicente.mieres.autofix.Repositories.VehicleRepository;
 
@@ -46,140 +48,242 @@ public class RepairServiceTest {
     private VehicleRepairRepository vehicleRepairRepository;
     @MockBean
     private VehicleRepairService vehicleRepairService;
-    @Autowired
-    private EntityManager entityManager;
     @MockBean
     private CostRecordRepository costRecordRepository;
-    @Autowired
-    private RepairTypeCostRepository repairTypeCostRepository;
+    @MockBean 
+    private CostRecordService costRecordService;
+    @MockBean
+    private RepairTypeCostService repairTypeCostService;
+    @MockBean
+    private RepairDiscountService repairDiscountService;
+    @MockBean
+    private KilometerChargeService kilometerChargeService;
+    @MockBean
+    private AgeChargeService ageChargeService;
+    @MockBean
+    private BrandService brandService;
     
     
 
     @Test
-    public void whenSaveRepair_ThenSavedRepairIsCorrectV1() {
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setVehicleId(1L);
-        vehicle.setMileage(4000);
-        vehicle.setRepairs(1);
-        vehicle.setManufactureYear("2024");
+public void whenSaveRepair_ThenSavedRepairIsCorrectV1() {
+    // Set up
+    VehicleEntity vehicle = new VehicleEntity();
+    vehicle.setVehicleId(1L);
+    vehicle.setMileage(4000);
+    vehicle.setRepairs(1);
+    vehicle.setManufactureYear("2024");
 
-        CreateRepair createRepair = new CreateRepair();
-        createRepair.setBonus(true);
-        createRepair.setRepairType(1);
-        createRepair.setVehicleId(1L);
+    CreateRepair createRepair = new CreateRepair();
+    createRepair.setBonus(true);
+    createRepair.setRepairType(1);
+    createRepair.setVehicleId(1L);
 
-        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+    RepairEntity expectedRepair = new RepairEntity();
+    expectedRepair.setRepairId(1L);
+    expectedRepair.setRepairTypeCostId(1L);
+    expectedRepair.setBonus(true);
 
-        RepairEntity newRepair = new RepairEntity();
-        newRepair.setRepairId(1L);
-        newRepair.setRepairTypeCostId(1L);
-        newRepair.setBonus(true);
+    CostRecordEntity expectedCostRecord = new CostRecordEntity();
+    expectedCostRecord.setCostRecordId(1L);
 
-        when(repairRepository.save(any(RepairEntity.class))).thenReturn(newRepair);
+    // Mocking
+    when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+    when(repairRepository.save(any(RepairEntity.class))).thenReturn(expectedRepair);
+    when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+    when(costRecordService.saveCostRecord(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
 
-        CostRecordEntity costRecord = new CostRecordEntity();
-        costRecord.setCostRecordId(1L);
-        when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(costRecord);
+    // Execution
+    RepairEntity savedRepair = repairService.saveRepair(createRepair);
 
-        RepairEntity repair = repairService.saveRepair(createRepair);
-        RepairEntity savedRepair = repairRepository.save(repair);
+    // Verification
+    assertThat(savedRepair.isBonus()).isTrue();
+    verify(repairRepository, times(2)).save(any(RepairEntity.class));  // Verify that the repair was saved exactly twice
+    verify(costRecordService).saveCostRecord(any(CostRecordEntity.class));  // Verify cost record was saved
+}
 
-        assertThat(savedRepair.isBonus()).isTrue();
-    }
-    @Test
-    public void whenSaveRepair_ThenSavedRepairIsCorrectV2() {
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setVehicleId(2L);
-        vehicle.setMileage(6000);
-        vehicle.setRepairs(3);
-        vehicle.setManufactureYear("2018");
 
-        CreateRepair createRepair = new CreateRepair();
-        createRepair.setBonus(true);
-        createRepair.setRepairType(1);
-        createRepair.setVehicleId(2L);
+@Test
+public void whenSaveRepair_ThenSavedRepairIsCorrectV2() {
+    VehicleEntity vehicle = new VehicleEntity();
+    vehicle.setVehicleId(2L);
+    vehicle.setMileage(6000);
+    vehicle.setRepairs(3);
+    vehicle.setManufactureYear("2018");
 
-        when(vehicleRepository.findById(2L)).thenReturn(Optional.of(vehicle));
+    CreateRepair createRepair = new CreateRepair();
+    createRepair.setBonus(true);
+    createRepair.setRepairType(1);
+    createRepair.setVehicleId(2L);
 
-        RepairEntity newRepair = new RepairEntity();
-        newRepair.setRepairId(1L);
-        newRepair.setRepairTypeCostId(1L);
-        newRepair.setBonus(true);
-
-        when(repairRepository.save(any(RepairEntity.class))).thenReturn(newRepair);
-
-        CostRecordEntity costRecord = new CostRecordEntity();
-        costRecord.setCostRecordId(1L);
-        when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(costRecord);
-
-        RepairEntity repair = repairService.saveRepair(createRepair);
-        RepairEntity savedRepair = repairRepository.save(repair);
-
-        assertThat(savedRepair.isBonus()).isTrue();
-    }
-
-    @Test
-    public void whenSaveRepair_ThenSavedRepairIsCorrectV3() {
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setVehicleId(1L);
-        vehicle.setMileage(13000);
-        vehicle.setRepairs(7);
-        vehicle.setManufactureYear("2012");
-
-        CreateRepair createRepair = new CreateRepair();
-        createRepair.setBonus(true);
-        createRepair.setRepairType(1);
-        createRepair.setVehicleId(3L);
-
-        when(vehicleRepository.findById(3L)).thenReturn(Optional.of(vehicle));
-
-        RepairEntity newRepair = new RepairEntity();
-        newRepair.setRepairId(1L);
-        newRepair.setRepairTypeCostId(1L);
-        newRepair.setBonus(true);
-
-        when(repairRepository.save(any(RepairEntity.class))).thenReturn(newRepair);
-
-        CostRecordEntity costRecord = new CostRecordEntity();
-        costRecord.setCostRecordId(1L);
-        when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(costRecord);
-
-        RepairEntity repair = repairService.saveRepair(createRepair);
-        RepairEntity savedRepair = repairRepository.save(repair);
-
-        assertThat(savedRepair.isBonus()).isTrue();
-    }
     
-    @Test
-    public void whenSaveRepair_ThenSavedRepairIsCorrectV4() {
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setVehicleId(4L);
-        vehicle.setMileage(26000);
-        vehicle.setRepairs(10);
-        vehicle.setManufactureYear("2000");
+    RepairEntity expectedRepair = new RepairEntity();
+    expectedRepair.setRepairId(1L);
+    expectedRepair.setRepairTypeCostId(1L);
+    expectedRepair.setBonus(true);
+    
+    CostRecordEntity expectedCostRecord = new CostRecordEntity();
+    expectedCostRecord.setCostRecordId(1L);
+    
+    when(vehicleRepository.findById(2L)).thenReturn(Optional.of(vehicle));
+    when(repairRepository.save(any(RepairEntity.class))).thenReturn(expectedRepair);
+    when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+    when(costRecordService.saveCostRecord(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+    
+    RepairEntity savedRepair = repairService.saveRepair(createRepair);
 
-        CreateRepair createRepair = new CreateRepair();
-        createRepair.setBonus(true);
-        createRepair.setRepairType(1);
-        createRepair.setVehicleId(4L);
+    assertThat(savedRepair.isBonus()).isTrue();
+    verify(repairRepository, times(2)).save(any(RepairEntity.class));  // Verify that the repair was saved exactly twice
+    verify(costRecordService).saveCostRecord(any(CostRecordEntity.class));
+}
 
-        when(vehicleRepository.findById(4L)).thenReturn(Optional.of(vehicle));
-        RepairEntity newRepair = new RepairEntity();
-        newRepair.setRepairId(1L);
-        newRepair.setRepairTypeCostId(1L);
-        newRepair.setBonus(true);
 
-        when(repairRepository.save(any(RepairEntity.class))).thenReturn(newRepair);
-        
-        CostRecordEntity costRecord = new CostRecordEntity();
-        costRecord.setCostRecordId(1L);
-        when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(costRecord);
+@Test
+public void whenSaveRepair_ThenSavedRepairIsCorrectV3() {
+    VehicleEntity vehicle = new VehicleEntity();
+    vehicle.setVehicleId(3L);  // Use the correct ID from your input
+    vehicle.setMileage(13000);
+    vehicle.setRepairs(7);
+    vehicle.setManufactureYear("2012");
 
-        RepairEntity repair = repairService.saveRepair(createRepair);
-        RepairEntity savedRepair = repairRepository.save(repair);
+    CreateRepair createRepair = new CreateRepair();
+    createRepair.setBonus(true);
+    createRepair.setRepairType(1);
+    createRepair.setVehicleId(3L);  // This should be aligned with `vehicle.setVehicleId(1L);`
 
-        assertThat(savedRepair.isBonus()).isTrue();
-    }
+    
+    RepairEntity expectedRepair = new RepairEntity();
+    expectedRepair.setRepairId(1L);
+    expectedRepair.setRepairTypeCostId(1L);
+    expectedRepair.setBonus(true);
+    
+    
+    CostRecordEntity expectedCostRecord = new CostRecordEntity();
+    expectedCostRecord.setCostRecordId(1L);
+    
+    when(vehicleRepository.findById(3L)).thenReturn(Optional.of(vehicle));
+    when(repairRepository.save(any(RepairEntity.class))).thenReturn(expectedRepair);
+    when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+    when(costRecordService.saveCostRecord(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+    
+    RepairEntity savedRepair = repairService.saveRepair(createRepair);
+
+    assertThat(savedRepair.isBonus()).isTrue();
+    verify(repairRepository, times(2)).save(any(RepairEntity.class));  // Verify that the repair was saved exactly twice
+    verify(costRecordService).saveCostRecord(any(CostRecordEntity.class));
+
+}
+
+    
+@Test
+public void whenSaveRepair_ThenSavedRepairIsCorrectV4() {
+    VehicleEntity vehicle = new VehicleEntity();
+    vehicle.setVehicleId(4L);
+    vehicle.setMileage(26000);
+    vehicle.setRepairs(10);
+    vehicle.setManufactureYear("2000");
+
+    CreateRepair createRepair = new CreateRepair();
+    createRepair.setBonus(true);
+    createRepair.setRepairType(1);
+    createRepair.setVehicleId(4L);
+
+
+    RepairEntity expectedRepair = new RepairEntity();
+    expectedRepair.setRepairId(1L);
+    expectedRepair.setRepairTypeCostId(1L);
+    expectedRepair.setBonus(true);
+
+
+    CostRecordEntity expectedCostRecord = new CostRecordEntity();
+    expectedCostRecord.setCostRecordId(1L);
+
+    when(vehicleRepository.findById(4L)).thenReturn(Optional.of(vehicle));
+    when(repairRepository.save(any(RepairEntity.class))).thenReturn(expectedRepair);
+    when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+    when(costRecordService.saveCostRecord(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+
+    RepairEntity savedRepair = repairService.saveRepair(createRepair);
+
+    assertThat(savedRepair.isBonus()).isTrue();
+    verify(repairRepository, times(2)).save(any(RepairEntity.class));  // Verify that the repair was saved exactly twice
+    verify(costRecordService).saveCostRecord(any(CostRecordEntity.class));
+
+}
+
+
+@Test
+public void whenSaveRepair_ThenSavedRepairIsCorrectV5() {
+    VehicleEntity vehicle = new VehicleEntity();
+    vehicle.setVehicleId(4L);
+    vehicle.setMileage(45000);
+    vehicle.setRepairs(10);
+    vehicle.setManufactureYear("2000");
+
+    CreateRepair createRepair = new CreateRepair();
+    createRepair.setBonus(true);
+    createRepair.setRepairType(1);
+    createRepair.setVehicleId(4L);
+
+
+    RepairEntity expectedRepair = new RepairEntity();
+    expectedRepair.setRepairId(1L);
+    expectedRepair.setRepairTypeCostId(1L);
+    expectedRepair.setBonus(true);
+
+
+    CostRecordEntity expectedCostRecord = new CostRecordEntity();
+    expectedCostRecord.setCostRecordId(1L);
+
+    when(vehicleRepository.findById(4L)).thenReturn(Optional.of(vehicle));
+    when(repairRepository.save(any(RepairEntity.class))).thenReturn(expectedRepair);
+    when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+    when(costRecordService.saveCostRecord(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+
+    RepairEntity savedRepair = repairService.saveRepair(createRepair);
+
+    assertThat(savedRepair.isBonus()).isTrue();
+    verify(repairRepository, times(2)).save(any(RepairEntity.class));  // Verify that the repair was saved exactly twice
+    verify(costRecordService).saveCostRecord(any(CostRecordEntity.class));
+
+}
+
+
+@Test
+public void whenSaveRepair_ThenSavedRepairIsCorrectV6() {
+    VehicleEntity vehicle = new VehicleEntity();
+    vehicle.setVehicleId(4L);
+    vehicle.setMileage(-10);
+    vehicle.setRepairs(0);
+    vehicle.setManufactureYear("2030");
+
+    CreateRepair createRepair = new CreateRepair();
+    createRepair.setBonus(true);
+    createRepair.setRepairType(1);
+    createRepair.setVehicleId(4L);
+
+
+    RepairEntity expectedRepair = new RepairEntity();
+    expectedRepair.setRepairId(1L);
+    expectedRepair.setRepairTypeCostId(1L);
+    expectedRepair.setBonus(true);
+
+    CostRecordEntity expectedCostRecord = new CostRecordEntity();
+    expectedCostRecord.setCostRecordId(1L);
+
+    when(vehicleRepository.findById(4L)).thenReturn(Optional.of(vehicle));
+    when(repairRepository.save(any(RepairEntity.class))).thenReturn(expectedRepair);
+    when(costRecordRepository.save(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+    when(costRecordService.saveCostRecord(any(CostRecordEntity.class))).thenReturn(expectedCostRecord);
+
+    RepairEntity savedRepair = repairService.saveRepair(createRepair);
+
+    assertThat(savedRepair.isBonus()).isTrue();
+    verify(repairRepository, times(2)).save(any(RepairEntity.class));  // Verify that the repair was saved exactly twice
+    verify(costRecordService).saveCostRecord(any(CostRecordEntity.class));
+
+}
+
 
     @Test 
     public void whenGetRepair_ThenRepairIsCorrect(){
@@ -248,94 +352,138 @@ public class RepairServiceTest {
     }
 
     @Test 
-    public void whenGetTotalCost_thenCostIsCorrect(){
+public void whenGetTotalCost_thenCostIsCorrect() {
+    RepairEntity repair = new RepairEntity();
+    repair.setRepairId(1L);
+    repair.setAgeChargeId(1L);
+    repair.setRepairDiscount(1L);
+    repair.setCostRecordId(1L);
+    repair.setKilometerChargeId(1L);
+    repair.setRepairTypeCostId(1L);
+    repair.setBonus(true);
 
-        RepairEntity repair = new RepairEntity();
-        repair.setRepairId(1L);
-        repair.setAgeChargeId(1L);
-        repair.setRepairDiscount(1L);
-        repair.setCostRecordId(1L);
-        repair.setKilometerChargeId(1L);
-        repair.setRepairTypeCostId(1L);
-        repair.setBonus(true);
+    LocalDateTime checkIn = LocalDateTime.of(2024, 4, 15, 10, 0);
+    LocalDateTime checkOut = LocalDateTime.of(2024, 4, 16, 10, 0);
+    LocalDateTime customerTime = LocalDateTime.of(2024, 4, 19, 10, 0);
+    repair.setCheckInDateTime(checkIn);
+    repair.setCheckOutDateTime(checkOut);
+    repair.setCostumerDateTime(customerTime);
 
-        LocalDateTime chekIn = LocalDateTime.of(2024, 4, 15, 10, 0, 0);
-        LocalDateTime chekOut = LocalDateTime.of(2024, 4, 16, 10, 0, 0);
-        LocalDateTime costumerTime = LocalDateTime.of(2024, 4, 19, 10, 0, 0);
-        repair.setCheckInDateTime(chekIn);
-        repair.setCheckOutDateTime(chekOut);
-        repair.setCostumerDateTime(costumerTime);
+    VehicleRepairEntity vr = new VehicleRepairEntity();
+    vr.setRepairId(1L);
+    vr.setVehicleId(1L);
+    vr.setVehicleRepairId(1L);
 
-        when(repairRepository.findById(1L)).thenReturn(Optional.of(repair));
+    VehicleEntity vehicle = new VehicleEntity();
+    vehicle.setVehicleId(1L);
+    vehicle.setMotorType("GASOLINE");
+    vehicle.setVehicleType("SEDAN");
+    vehicle.setBrand_id(1L);
 
-        VehicleRepairEntity vr = new VehicleRepairEntity();
-        vr.setRepairId(1L);
-        vr.setVehicleId(1L);
-        vr.setVehicleRepairId(1L);
+    CostRecordEntity cr = new CostRecordEntity();
+    cr.setCostRecordId(1L);
 
-        when(vehicleRepairService.getByRepairId(1L)).thenReturn(vr);
+    RepairTypeCostEntity repairTypeCost = new RepairTypeCostEntity();
+    repairTypeCost.setRepairTypeCostId(1L);
+    repairTypeCost.setGasolineCost(120000);  // Asumiendo que este es el costo base
 
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setVehicleId(1L);
-        vehicle.setMotorType("GASOLINE");
-        vehicle.setVehicleType("SEDAN");
-        vehicle.setBrand_id(1L);
+    RepairDiscountEntity repairDiscount = new RepairDiscountEntity();
+    repairDiscount.setRepairDiscountId(1L);
+    repairDiscount.setGasolineCost(0.0f);
 
-        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+    KilometerChargeEntity kilometerCharge = new KilometerChargeEntity();
+    kilometerCharge.setKilometerChargeId(1L);
+    kilometerCharge.setSedanCharge(0.0f);
 
-        CostRecordEntity cr = new CostRecordEntity();
-        cr.setCostRecordId(1L);
-        when(costRecordRepository.findById(1L)).thenReturn(Optional.of(cr));
+    AgeChargeEntity ageCharge = new AgeChargeEntity();
+    ageCharge.setAgeChargeId(1L);
+    ageCharge.setSedanCharge(0.0f);
 
-        float totalCost = repairService.getTotalCost(1L);
+    BrandEntity brandEntity = new BrandEntity();
+    brandEntity.setBrandId(1L);
+    brandEntity.setBonusAmount(50000);
 
-        assertThat(totalCost).isEqualTo(136850.0f);
+    when(brandService.getBrand(1L)).thenReturn(brandEntity);
+    when(ageChargeService.getAgeCharge(1L)).thenReturn(ageCharge);
+    when(kilometerChargeService.getKilometerCharge(1L)).thenReturn(kilometerCharge);
+    when(repairDiscountService.getRepairDiscount(1L)).thenReturn(repairDiscount);
+    when(repairRepository.findById(1L)).thenReturn(Optional.of(repair));
+    when(costRecordService.getCostRecord(1L)).thenReturn(cr);
+    when(vehicleRepairService.getByRepairId(1L)).thenReturn(vr);
+    when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+    when(repairTypeCostService.getRepairTypeCost(1L)).thenReturn(repairTypeCost);
 
-    }
+    float totalCost = repairService.getTotalCost(1L);
+
+    assertThat(totalCost).isEqualTo(149940.0f);
+}
 
     @Test 
     public void whenGetTotalCost_thenCostIsCorrectv2(){
 
         RepairEntity repair = new RepairEntity();
-        repair.setRepairId(1L);
-        repair.setAgeChargeId(1L);
-        repair.setRepairDiscount(1L);
-        repair.setCostRecordId(1L);
-        repair.setKilometerChargeId(1L);
-        repair.setRepairTypeCostId(1L);
-        repair.setBonus(false);
+    repair.setRepairId(1L);
+    repair.setAgeChargeId(1L);
+    repair.setRepairDiscount(1L);
+    repair.setCostRecordId(1L);
+    repair.setKilometerChargeId(1L);
+    repair.setRepairTypeCostId(1L);
+    repair.setBonus(false);
 
-        LocalDateTime chekIn = LocalDateTime.of(2024, 4, 12, 10, 0, 0);
-        LocalDateTime chekOut = LocalDateTime.of(2024, 4, 16, 10, 0, 0);
-        LocalDateTime costumerTime = LocalDateTime.of(2024, 4, 19, 10, 0, 0);
-        repair.setCheckInDateTime(chekIn);
-        repair.setCheckOutDateTime(chekOut);
-        repair.setCostumerDateTime(costumerTime);
+    LocalDateTime checkIn = LocalDateTime.of(2024, 4, 15, 10, 0);
+    LocalDateTime checkOut = LocalDateTime.of(2024, 4, 16, 10, 0);
+    LocalDateTime customerTime = LocalDateTime.of(2024, 4, 19, 10, 0);
+    repair.setCheckInDateTime(checkIn);
+    repair.setCheckOutDateTime(checkOut);
+    repair.setCostumerDateTime(customerTime);
 
-        when(repairRepository.findById(1L)).thenReturn(Optional.of(repair));
+    VehicleRepairEntity vr = new VehicleRepairEntity();
+    vr.setRepairId(1L);
+    vr.setVehicleId(1L);
+    vr.setVehicleRepairId(1L);
 
-        VehicleRepairEntity vr = new VehicleRepairEntity();
-        vr.setRepairId(1L);
-        vr.setVehicleId(1L);
-        vr.setVehicleRepairId(1L);
+    VehicleEntity vehicle = new VehicleEntity();
+    vehicle.setVehicleId(1L);
+    vehicle.setMotorType("GASOLINE");
+    vehicle.setVehicleType("SEDAN");
+    vehicle.setBrand_id(1L);
 
-        when(vehicleRepairService.getByRepairId(1L)).thenReturn(vr);
+    CostRecordEntity cr = new CostRecordEntity();
+    cr.setCostRecordId(1L);
 
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setVehicleId(1L);
-        vehicle.setMotorType("GASOLINE");
-        vehicle.setVehicleType("SEDAN");
-        vehicle.setBrand_id(1L);
+    RepairTypeCostEntity repairTypeCost = new RepairTypeCostEntity();
+    repairTypeCost.setRepairTypeCostId(1L);
+    repairTypeCost.setGasolineCost(120000);  // Asumiendo que este es el costo base
 
-        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+    RepairDiscountEntity repairDiscount = new RepairDiscountEntity();
+    repairDiscount.setRepairDiscountId(1L);
+    repairDiscount.setGasolineCost(0.0f);
 
-        CostRecordEntity cr = new CostRecordEntity();
-        cr.setCostRecordId(1L);
-        when(costRecordRepository.findById(1L)).thenReturn(Optional.of(cr));
+    KilometerChargeEntity kilometerCharge = new KilometerChargeEntity();
+    kilometerCharge.setKilometerChargeId(1L);
+    kilometerCharge.setSedanCharge(0.0f);
 
-        float totalCost = repairService.getTotalCost(1L);
+    AgeChargeEntity ageCharge = new AgeChargeEntity();
+    ageCharge.setAgeChargeId(1L);
+    ageCharge.setSedanCharge(0.0f);
 
-        assertThat(totalCost).isEqualTo(157080.0f);
+    BrandEntity brandEntity = new BrandEntity();
+    brandEntity.setBrandId(1L);
+    brandEntity.setBonusAmount(50000);
+
+    when(brandService.getBrand(1L)).thenReturn(brandEntity);
+    when(ageChargeService.getAgeCharge(1L)).thenReturn(ageCharge);
+    when(kilometerChargeService.getKilometerCharge(1L)).thenReturn(kilometerCharge);
+    when(repairDiscountService.getRepairDiscount(1L)).thenReturn(repairDiscount);
+    when(repairRepository.findById(1L)).thenReturn(Optional.of(repair));
+    when(costRecordService.getCostRecord(1L)).thenReturn(cr);
+    when(vehicleRepairService.getByRepairId(1L)).thenReturn(vr);
+    when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+    when(repairTypeCostService.getRepairTypeCost(1L)).thenReturn(repairTypeCost);
+
+    float totalCost = repairService.getTotalCost(1L);
+
+    assertThat(totalCost).isEqualTo(149940.0f);
 
     }
 

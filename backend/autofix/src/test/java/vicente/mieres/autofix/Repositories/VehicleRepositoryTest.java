@@ -4,12 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.Entities.VehicleEntity;
 
-@DataJpaTest
+@SpringBootTest
+@Transactional
+@ActiveProfiles("test")
 public class VehicleRepositoryTest {
 
     @Autowired
@@ -21,12 +25,13 @@ public class VehicleRepositoryTest {
     public void whenExistByRegistration_thenVehicleExists(){
 
         VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setRegistration("ABCD12");
+        vehicle.setVehicleId(null);
+        vehicle.setRegistration("ZXCV12");
 
         entityManager.merge(vehicle);
         entityManager.flush();
 
-        boolean isExists = vehicleRepository.existsByRegistration("ABCD12");
+        boolean isExists = vehicleRepository.existsByRegistration("ZXCV12");
 
         assertThat(isExists).isTrue();
 

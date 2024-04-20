@@ -69,7 +69,7 @@ public class RepairService {
             newRepair.setKilometerChargeId(3L);
         else if(mileage >= 25001 && mileage <= 40000)
             newRepair.setKilometerChargeId(4L);
-        else if(mileage >= 40001)
+        else if(mileage > 40000)
             newRepair.setKilometerChargeId(5L);
 
         if(vehicleAge >= 0 && vehicleAge <= 5)
@@ -83,17 +83,15 @@ public class RepairService {
 
         newRepair.setBonus(bonus);
         newRepair.setCheckInDateTime(checkInDateTime);
-
+        
         CostRecordEntity costRecord = new CostRecordEntity();
         costRecord.setVehicleId(vehicleId);
         costRecord = costRecordService.saveCostRecord(costRecord);
         Long costRecordId = costRecord.getCostRecordId();
-        System.out.println(costRecordId);
+
         newRepair.setCostRecordId(costRecordId);
 
         newRepair = repairRepository.save(newRepair);
-        System.out.println(newRepair.getRepairId());
-
 
         VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
         Long repairId = newRepair.getRepairId();
@@ -126,7 +124,7 @@ public class RepairService {
             repair.setRepairDiscount(newRepair.getRepairDiscount());
         if(newRepair.getRepairTypeCostId() != null)
             repair.setRepairTypeCostId(newRepair.getRepairTypeCostId());
-        if(newRepair.getTotalCost() >= 0.0f)
+        if(newRepair.getTotalCost() > 0.0f)
             repair.setTotalCost(newRepair.getTotalCost());
         if(newRepair.getRepairId() != null)
             repair.setRepairId(newRepair.getRepairId());

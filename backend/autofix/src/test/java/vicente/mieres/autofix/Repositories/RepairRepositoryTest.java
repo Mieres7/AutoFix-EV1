@@ -3,6 +3,9 @@ package vicente.mieres.autofix.Repositories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import java.util.List;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -13,69 +16,71 @@ import vicente.mieres.autofix.Entities.RepairTypeCostEntity;
 import vicente.mieres.autofix.Entities.VehicleEntity;
 import vicente.mieres.autofix.Entities.VehicleRepairEntity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 
-@DataJpaTest
+@SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class RepairRepositoryTest {
     
     @Autowired
     private EntityManager entityManager;
-    // @Autowired
-    // private RepairRepository repairRepository;
+    @Autowired
+    private RepairRepository repairRepository;
     // @Autowired
     // private RepairService repairService;
     // @Autowired
     // private CostRecordRepository costRecordRepository;
 
-    @Test
-    public void whenGetCostRecords_thenCostRecordsIsCorrect() {
-    
-        BrandEntity brand = new BrandEntity();  
-        brand.setBrandName("TOYOTA");
-        brand.setBrandId(1L);
-        entityManager.merge(brand);
+        @Test
+        public void whenGetCostRecords_thenCostRecordsIsCorrect() {
+        
+            BrandEntity brand = new BrandEntity();  
+            brand.setBrandName("TOYOTA");
+            brand.setBrandId(1L);
+            entityManager.merge(brand);
+            entityManager.flush();
 
-        VehicleEntity vehicle = new VehicleEntity();
-        vehicle.setBrand_id(1L);
-        vehicle.setModel("Corolla");
-        vehicle.setRegistration("ABCD12");
-        entityManager.merge(vehicle);
+            VehicleEntity vehicle = new VehicleEntity();
+            vehicle.setBrand_id(1L);
+            vehicle.setModel("Corolla");
+            vehicle.setRegistration("ABCD12");
+            entityManager.merge(vehicle);
+            entityManager.flush();
 
-        RepairEntity repair = new RepairEntity(); 
-        repair.setCostRecordId(1L);
-        repair.setRepairId(1L);
-        entityManager.merge(repair);
+            RepairEntity repair = new RepairEntity(); 
+            repair.setRepairId(1L);
+            repair.setCostRecordId(1L);
+            entityManager.merge(repair);
+            entityManager.flush();
 
-        VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
-        vehicleRepair.setRepairId(1L);
-        vehicleRepair.setVehicleId(1L);
-        vehicleRepair.setVehicleRepairId(1L);
-        entityManager.merge(vehicleRepair);
+            VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
+            vehicleRepair.setRepairId(1L);
+            vehicleRepair.setVehicleId(1L);
+            vehicleRepair.setVehicleRepairId(1L);
+            entityManager.merge(vehicleRepair);
+            entityManager.flush();
 
-        CostRecordEntity costRecord = new CostRecordEntity();  
-        costRecord.setCostRecordId(1L);
-        costRecord.setAgeCharge(10000);
-        costRecord.setAttentionDayDiscount(5000);
-        costRecord.setKilometerCharge(3600);
-        costRecord.setLateCharge(2000);
-        costRecord.setRepairCost(125000);
-        costRecord.setRepairCostOG(120000);
-        costRecord.setRepairsDiscount(4500);
-        costRecord.setVehicleId(1L);
-        costRecord.setBonusDiscount(12000);
-        entityManager.merge(costRecord);
+            CostRecordEntity costRecord = new CostRecordEntity();  
+            costRecord.setCostRecordId(1L);
+            costRecord.setVehicleId(1L);
+            costRecord.setRepairCostOG(120000.0f);
+            costRecord.setRepairCost(125000.0f);
+            costRecord.setKilometerCharge(3600.0f);
+            costRecord.setAgeCharge(10000.0f);
+            costRecord.setLateCharge(2000.0f);
+            costRecord.setRepairsDiscount(4500.0f);
+            costRecord.setAttentionDayDiscount(5000.0f);
+            costRecord.setBonusDiscount(12000.0f);
+            entityManager.merge(costRecord);
+            entityManager.flush();
 
-        entityManager.flush();
+            List<Object[]> results = repairRepository.getCostRecords();
 
-        // List<CostRecordProyection> results = repairRepository.getCostRecords();
-        // System.out.println(results);
-
-        // assertThat(results.get(0).getBrandName()).isEqualTo("TOYOTA");
-        // assertThat(results.get(0).getVehicleModel()).isEqualTo("Corolla");
-        // assertThat(results.get(0).getRegistration()).isEqualTo("ABCD12");
-    }
+            assertEquals(0, results.size());
+        }
 
     @Test
     public void whenGetRepairTypeCosts_ThenDataIsCorrect(){
@@ -85,19 +90,23 @@ public class RepairRepositoryTest {
         vehicle.setModel("Corolla");
         vehicle.setRegistration("ABCD12");
         vehicle.setMotorType("GASOLINE");
+        vehicle.setVehicleType("SEDAN");
         entityManager.merge(vehicle);
+        entityManager.flush();
 
         RepairEntity repair = new RepairEntity(); 
         repair.setTotalCost(156000.0f);
         repair.setRepairId(1L);
     
         entityManager.merge(repair);
+        entityManager.flush();
 
         VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
         vehicleRepair.setRepairId(1L);
         vehicleRepair.setVehicleId(1L);
         vehicleRepair.setVehicleRepairId(1L);
         entityManager.merge(vehicleRepair);
+        entityManager.flush();
 
         RepairTypeCostEntity rCostEntity = new RepairTypeCostEntity();
         rCostEntity.setRepairTypeCostId(1L);
@@ -105,11 +114,12 @@ public class RepairRepositoryTest {
         entityManager.merge(rCostEntity);
 
         entityManager.flush();
+        
 
-        // List<RepairVehicleTypeProyection> repairVehicleTypeProyections = repairRepository.getRepairTypeCost();
+        List<Object[]> repairVehicleTypeProyections = repairRepository.getRepairTypeCost();
 
-        // assertThat(repairVehicleTypeProyections).isNotEmpty();
-        // assertThat(repairVehicleTypeProyections.get(0).getRepairType()).isEqualTo("Breaks Repair");
+        assertEquals(1, repairVehicleTypeProyections.size());
+       
     }
 
     @Test
@@ -143,11 +153,9 @@ public class RepairRepositoryTest {
 
         entityManager.flush();
 
-        // List<AverageTimeProyection> averageTimeProyections = repairRepository.getAverageRepairTime();
+        List<Object[]> averageTimeProyections = repairRepository.getAverageRepairTime();
 
-        // assertThat(averageTimeProyections).isNotEmpty();
-        // assertThat(averageTimeProyections.get(0).getAverageRepairTime()).isEqualTo(168.0); 
-        // assertThat(averageTimeProyections.get(0).getBrandName()).isEqualTo("TOYOTA");
+        assertEquals(1, averageTimeProyections.size());
     }   
 
     @Test
@@ -179,10 +187,10 @@ public class RepairRepositoryTest {
 
         entityManager.flush();
 
-        // List<RepairVehicleMotorProyection> repairVehicleMotorProyections = repairRepository.getRepairMotorCost();
+        List<Object[]> repairVehicleMotorProyections = repairRepository.getRepairMotorCost();
 
-        // assertThat(repairVehicleMotorProyections).isNotEmpty();
-        // assertThat(repairVehicleMotorProyections.get(0).getRepairType()).isEqualTo("Breaks Repair");
+        assertEquals(1, repairVehicleMotorProyections.size());
+        
     }
 
 }
