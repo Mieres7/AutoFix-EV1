@@ -15,16 +15,20 @@ public class VehicleService {
     @Autowired
     VehicleRepository vehicleRepository;
 
-    public VehicleEntity saveVehicle(CreateVehicle vehicleData) throws Exception{
-        VehicleEntity newVehicle = new VehicleEntity();
 
-        newVehicle.setBrand_id(vehicleData.getBrand_id());
-        newVehicle.setManufactureYear(vehicleData.getManufatureYear());
+    public VehicleEntity saveVehicle(CreateVehicle vehicleData) {
+        VehicleEntity newVehicle = new VehicleEntity();
+        
+        Long brandid = (Long) vehicleData.getBrandId();
+        System.out.println(vehicleData);
+        newVehicle.setBrand_id(brandid);
+        newVehicle.setManufactureYear(vehicleData.getManufactureYear());
         newVehicle.setMileage(vehicleData.getMileage());
         newVehicle.setModel(vehicleData.getModel());
         newVehicle.setMotorType(vehicleData.getMotorType());
         newVehicle.setRepairs(0);
         newVehicle.setSeats(vehicleData.getSeats());
+        newVehicle.setVehicleType(vehicleData.getVehicleType());
 
         String registration = vehicleData.getRegistration();
         String expression = "^[A-Z]{4}\\d{2}$";

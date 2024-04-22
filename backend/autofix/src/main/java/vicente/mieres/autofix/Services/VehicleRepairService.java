@@ -1,5 +1,8 @@
 package vicente.mieres.autofix.Services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +23,7 @@ public class VehicleRepairService {
         return vehicleRepairRepository.findByRepairId(repairId);
     }
 
+    public List<VehicleRepairEntity> getVehicleRepairs(){
+        return (ArrayList<VehicleRepairEntity>)vehicleRepairRepository.findAll();
+    }
 }

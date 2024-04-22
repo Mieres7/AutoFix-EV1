@@ -1,5 +1,6 @@
 package vicente.mieres.autofix.Controllers;
 
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
+
+
 @RestController
 @RequestMapping("/repair")
 @CrossOrigin("*")
@@ -32,6 +35,13 @@ public class RepairController {
         return ResponseEntity.ok(newRepair);
     }
 
+    @GetMapping("/s")
+    public ResponseEntity<List<RepairEntity>> getRepairs() {
+        List<RepairEntity> repairs = repairService.getRepairs();
+        return ResponseEntity.ok(repairs);
+    }
+    
+
     @GetMapping("/{repairId}")
     public ResponseEntity<Float> getTotalCost(@PathVariable Long repairId) {
         float totalCost = repairService.getTotalCost(repairId);
@@ -43,4 +53,6 @@ public class RepairController {
         RepairEntity repairUpdated = repairService.updateRepair(repairId, repair);
         return ResponseEntity.ok(repairUpdated);
     }
+
+
 }

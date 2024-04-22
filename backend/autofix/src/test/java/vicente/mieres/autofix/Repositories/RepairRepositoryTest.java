@@ -2,9 +2,7 @@ package vicente.mieres.autofix.Repositories;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
@@ -22,7 +20,6 @@ import java.time.LocalDateTime;
 
 @SpringBootTest
 @Transactional
-@ActiveProfiles("test")
 public class RepairRepositoryTest {
     
     @Autowired
@@ -31,40 +28,47 @@ public class RepairRepositoryTest {
     private RepairRepository repairRepository;
     // @Autowired
     // private RepairService repairService;
-    // @Autowired
-    // private CostRecordRepository costRecordRepository;
+    @Autowired
+    private CostRecordRepository costRecordRepository;
+    @Autowired
+    private BrandRepository brandRepository;
+    @Autowired 
+    private VehicleRepository vehicleRepository;
+    @Autowired
+    private VehicleRepairRepository vehicleRepairRepository;
+    
 
         @Test
         public void whenGetCostRecords_thenCostRecordsIsCorrect() {
         
-            BrandEntity brand = new BrandEntity();  
-            brand.setBrandName("TOYOTA");
-            brand.setBrandId(1L);
-            entityManager.merge(brand);
-            entityManager.flush();
+            BrandEntity brand = new BrandEntity(null, "Toyota", true, 100, 300, "111");  
+            // brand.setBrandName("TOYOTA");
+            // brand.setBrandId(null);
+            entityManager.persist(brand);
+            // entityManager.flush();
 
             VehicleEntity vehicle = new VehicleEntity();
-            vehicle.setBrand_id(1L);
+            vehicle.setBrand_id(99L);
             vehicle.setModel("Corolla");
             vehicle.setRegistration("ABCD12");
             entityManager.merge(vehicle);
-            entityManager.flush();
+            // entityManager.flush();
 
             RepairEntity repair = new RepairEntity(); 
-            repair.setRepairId(1L);
+            repair.setRepairId(99L);
             repair.setCostRecordId(1L);
             entityManager.merge(repair);
-            entityManager.flush();
+            // entityManager.flush();
 
             VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
-            vehicleRepair.setRepairId(1L);
-            vehicleRepair.setVehicleId(1L);
-            vehicleRepair.setVehicleRepairId(1L);
+            vehicleRepair.setRepairId(99L);
+            vehicleRepair.setVehicleId(99L);
+            vehicleRepair.setVehicleRepairId(99L);
             entityManager.merge(vehicleRepair);
-            entityManager.flush();
+            // entityManager.flush();
 
             CostRecordEntity costRecord = new CostRecordEntity();  
-            costRecord.setCostRecordId(1L);
+            costRecord.setCostRecordId(99L);
             costRecord.setVehicleId(1L);
             costRecord.setRepairCostOG(120000.0f);
             costRecord.setRepairCost(125000.0f);
@@ -80,6 +84,10 @@ public class RepairRepositoryTest {
             List<Object[]> results = repairRepository.getCostRecords();
 
             assertEquals(0, results.size());
+            costRecordRepository.delete(costRecord);
+            brandRepository.delete(brand);
+            vehicleRepository.delete(vehicle);
+            vehicleRepairRepository.delete(vehicleRepair);
         }
 
     @Test

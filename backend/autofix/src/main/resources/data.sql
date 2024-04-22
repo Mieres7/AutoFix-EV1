@@ -34,10 +34,10 @@ INSERT INTO repair_type_cost (repair_type_cost_id, repair_type, description, gas
 INSERT INTO brand(bonus, bonus_amount, discount, brand_id, brand_name, period) values
 (true, 3, 5000, 1, 'TOYOTA','01-2024');
 
-INSERT INTO vehicle (mileage, repairs, seats, brand_id, vehicle_id, manufacture_year, model, motor_type, registration, vehicle_type) values
-(5300, 2, 5, 1, 1, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SEDAN'),
-(5300, 2, 5, 1, 2, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SUV'),
-(5300, 2, 5, 1, 3, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'HATCHBACK'),
-(5300, 2, 5, 1, 4,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SEDAN'),
-(5300, 2, 5, 1, 5,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SUV'),
-(5300, 2, 5, 1, 6,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'HATCHBACK');
+-- INSERT INTO vehicle (mileage, repairs, seats, brand_id, vehicle_id, manufacture_year, model, motor_type, registration, vehicle_type) values
+-- (5300, 2, 5, 1, 1, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SEDAN'),
+-- (5300, 2, 5, 1, 2, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SUV'),
+-- (5300, 2, 5, 1, 3, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'HATCHBACK'),
+-- (5300, 2, 5, 1, 4,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SEDAN'),
+-- (5300, 2, 5, 1, 5,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SUV'),
+-- (5300, 2, 5, 1, 6,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'HATCHBACK');

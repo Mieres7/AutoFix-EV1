@@ -2,6 +2,7 @@ package vicente.mieres.autofix.Services;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class RepairService {
     @Autowired
     CostRecordService costRecordService;
 
+    public List<RepairEntity> getRepairs(){
+        return (ArrayList<RepairEntity>) repairRepository.findAll();
+    }
+
     public RepairEntity saveRepair(CreateRepair repairData){
         RepairEntity newRepair = new RepairEntity();
 
@@ -52,7 +57,7 @@ public class RepairService {
             }
         }
 
-        if(repairs >= 1 && repairs <= 2)
+        if(repairs >= 0 && repairs <= 2)
             newRepair.setRepairDiscount(1L);
         else if(repairs >=3 && repairs <= 5)
             newRepair.setRepairDiscount(2L);
@@ -140,6 +145,9 @@ public class RepairService {
 
 
     public float getTotalCost(Long repairId){
+
+        System.out.println("holaohlao");
+        System.out.println(repairId);
 
     RepairEntity repair = this.repairRepository.findById(repairId).get();
     VehicleRepairEntity vehicleRepair = vehicleRepairService.getByRepairId(repairId);

@@ -11,10 +11,10 @@ public class CreateVehicle {
 
     private String registration;
     private String model;
-    private String vehicle_type;
-    private String manufatureYear;
+    private String vehicleType;
+    private String manufactureYear;
     private String motorType;
     private int seats;
     private int mileage;
-    private Long brand_id;
+    private Long brandId;
 }
