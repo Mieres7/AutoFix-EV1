@@ -27,7 +27,8 @@ public class CostRecordService {
 
     public CostRecordEntity setCostRecord(Long costRecordId, float repairValueOG,float repairValue, float kilometerCharge, float ageCharge, float daysBetweenValue, float repairDiscount, float attentionDayDiscount, float bonusDiscount){
         CostRecordEntity costRecord = this.getCostRecord(costRecordId);
-
+        System.out.println(repairValueOG);
+        System.out.println(bonusDiscount);
         costRecord.setRepairCostOG(repairValueOG);
         costRecord.setAgeCharge(ageCharge);
         costRecord.setAttentionDayDiscount(attentionDayDiscount);

@@ -31,13 +31,26 @@ INSERT INTO repair_type_cost (repair_type_cost_id, repair_type, description, gas
 (10, 'Fuel System Repairs', 'Cleaning or replacing fuel injectors, repairing or replacing the fuel pump, and troubleshooting fuel supply issues.', 130000, 140000, 220000, 0),
 (11, 'Windshield and Glass Replacement', 'Repairing small cracks in the windshield or complete replacement of damaged windshields and windows.', 80000, 80000, 80000, 80000);
 
-INSERT INTO brand(bonus, bonus_amount, discount, brand_id, brand_name, period) values
-(true, 3, 5000, 1, 'TOYOTA','01-2024');
+INSERT INTO brand(bonus, bonus_amount, discount, brand_id, brand_name, period) VALUES
+(true, 0, 0, 1, 'TOYOTA','01-2024'),
+(true, 0, 0, 2, 'FORD','01-2024'),
+(true, 0, 0, 3, 'HYUNDAI','01-2024'),
+(true, 0, 0, 4, 'HONDA','01-2024'),
+(false, 0, 0, 5, 'CHEVROLET', '01-2024'),
+(false, 0, 0, 6, 'NISSAN', '01-2024'),
+(false, 0, 0, 7, 'VOLKSWAGEN', '01-2024'),
+(false, 0, 0, 8, 'MAZDA', '01-2024'),
+(false, 0, 0, 9, 'SUBARU', '01-2024'),
+(false, 0, 0, 10, 'KIA', '01-2024'),
+(false, 0, 0, 11, 'MITSUBISHI', '01-2024'),
+(false, 0, 0, 12, 'BMW', '01-2024'),
+(false, 0, 0, 13, 'MERCEDES-BENZ', '01-2024'),
+(false, 0, 0, 14, 'AUDI', '01-2024');
 
--- INSERT INTO vehicle (mileage, repairs, seats, brand_id, vehicle_id, manufacture_year, model, motor_type, registration, vehicle_type) values
--- (5300, 2, 5, 1, 1, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SEDAN'),
--- (5300, 2, 5, 1, 2, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SUV'),
--- (5300, 2, 5, 1, 3, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'HATCHBACK'),
--- (5300, 2, 5, 1, 4,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SEDAN'),
--- (5300, 2, 5, 1, 5,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SUV'),
--- (5300, 2, 5, 1, 6,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'HATCHBACK');
+--  INSERT INTO vehicle (mileage, repairs, seats, brand_id, vehicle_id, manufacture_year, model, motor_type, registration, vehicle_type) values
+--  (5300, 2, 5, 1, 1, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SEDAN'),
+--  (5300, 2, 5, 1, 2, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SUV'),
+--  (5300, 2, 5, 1, 3, '2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'HATCHBACK'),
+--  (5300, 2, 5, 1, 4,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SEDAN'),
+--  (5300, 2, 5, 1, 5,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'SUV'),
+--  (5300, 2, 5, 1, 6,'2024', 'COROLLA', 'GASOLINE', 'ABCD12', 'HATCHBACK');

@@ -1,6 +1,8 @@
 package vicente.mieres.autofix.Controllers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +99,19 @@ public class RepairControllerTest {
                         .content(repairJson))
                 .andExpect(status().isOk());
         
+    }
+
+    @Test
+    public void getRepairs_shouldReturnAllRepairs() throws Exception{
+        RepairEntity r1 = new RepairEntity();
+        RepairEntity r2 = new RepairEntity();
+
+        List<RepairEntity> list =  new ArrayList<>();
+        list.add(r1);
+        list.add(r2);
+
+        given(repairService.getRepairs()).willReturn(list);
+        mockMvc.perform(get("/repair/")).andExpect(status().isOk());
     }
     
 

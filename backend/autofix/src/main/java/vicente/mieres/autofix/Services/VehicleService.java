@@ -29,6 +29,7 @@ public class VehicleService {
         newVehicle.setRepairs(0);
         newVehicle.setSeats(vehicleData.getSeats());
         newVehicle.setVehicleType(vehicleData.getVehicleType());
+    
 
         String registration = vehicleData.getRegistration();
         String expression = "^[A-Z]{4}\\d{2}$";

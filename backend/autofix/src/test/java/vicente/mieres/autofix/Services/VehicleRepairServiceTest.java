@@ -3,6 +3,8 @@ package vicente.mieres.autofix.Services;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,5 +50,16 @@ public class VehicleRepairServiceTest {
 
     }
 
+    @Test
+    public void whenGetAll_shouldReturnAll(){
+        VehicleRepairEntity vr = new VehicleRepairEntity();
+        vr.setRepairId(1L);
+
+        List<VehicleRepairEntity> list = new ArrayList<>();
+        list.add(vr);
+        when(vehicleRepairRepository.findAll()).thenReturn(list);
+        List<VehicleRepairEntity> newlist = vehicleRepairService.getVehicleRepairs();
+        assertThat(list).isEqualTo(newlist);
+    }
     
 }

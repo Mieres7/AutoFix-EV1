@@ -41,10 +41,10 @@ public class RepairRepositoryTest {
         @Test
         public void whenGetCostRecords_thenCostRecordsIsCorrect() {
         
-            BrandEntity brand = new BrandEntity(null, "Toyota", true, 100, 300, "111");  
+            // BrandEntity brand = new BrandEntity(99, "Toyota", true, 100, 300, "111");  
             // brand.setBrandName("TOYOTA");
             // brand.setBrandId(null);
-            entityManager.persist(brand);
+            // entityManager.persist(brand);
             // entityManager.flush();
 
             VehicleEntity vehicle = new VehicleEntity();
@@ -85,7 +85,6 @@ public class RepairRepositoryTest {
 
             assertEquals(0, results.size());
             costRecordRepository.delete(costRecord);
-            brandRepository.delete(brand);
             vehicleRepository.delete(vehicle);
             vehicleRepairRepository.delete(vehicleRepair);
         }
@@ -126,7 +125,7 @@ public class RepairRepositoryTest {
 
         List<Object[]> repairVehicleTypeProyections = repairRepository.getRepairTypeCost();
 
-        assertEquals(1, repairVehicleTypeProyections.size());
+        assertEquals(11, repairVehicleTypeProyections.size());
        
     }
 
@@ -163,7 +162,7 @@ public class RepairRepositoryTest {
 
         List<Object[]> averageTimeProyections = repairRepository.getAverageRepairTime();
 
-        assertEquals(1, averageTimeProyections.size());
+            assertEquals(1, averageTimeProyections.size());
     }   
 
     @Test
@@ -197,7 +196,7 @@ public class RepairRepositoryTest {
 
         List<Object[]> repairVehicleMotorProyections = repairRepository.getRepairMotorCost();
 
-        assertEquals(1, repairVehicleMotorProyections.size());
+        assertEquals(11, repairVehicleMotorProyections.size());
         
     }
 

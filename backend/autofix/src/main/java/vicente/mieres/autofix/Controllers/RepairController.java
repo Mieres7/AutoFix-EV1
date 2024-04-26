@@ -35,7 +35,7 @@ public class RepairController {
         return ResponseEntity.ok(newRepair);
     }
 
-    @GetMapping("/s")
+    @GetMapping("/")
     public ResponseEntity<List<RepairEntity>> getRepairs() {
         List<RepairEntity> repairs = repairService.getRepairs();
         return ResponseEntity.ok(repairs);

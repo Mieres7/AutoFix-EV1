@@ -254,7 +254,7 @@ public void whenSaveRepair_ThenSavedRepairIsCorrectV6() {
     VehicleEntity vehicle = new VehicleEntity();
     vehicle.setVehicleId(4L);
     vehicle.setMileage(-10);
-    vehicle.setRepairs(0);
+    vehicle.setRepairs(-4);
     vehicle.setManufactureYear("2030");
 
     CreateRepair createRepair = new CreateRepair();
@@ -574,6 +574,18 @@ public void whenGetTotalCost_thenCostIsCorrect() {
 
         // Verificaciones
         assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    public void getAllRepairs_shouldReturnAll(){
+        RepairEntity r = new RepairEntity();
+        r.setRepairId(1L);
+        List<RepairEntity> list = new ArrayList<>();
+        list.add(r);
+
+        when(repairService.getRepairs()).thenReturn(list);
+        List<RepairEntity> newList = repairService.getRepairs();
+        assertThat(list).isEqualTo(newList);
     }
 
 }

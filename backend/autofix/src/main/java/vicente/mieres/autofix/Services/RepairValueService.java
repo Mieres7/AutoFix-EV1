@@ -1,6 +1,7 @@
 package vicente.mieres.autofix.Services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,8 +110,18 @@ public class RepairValueService {
     }
 
     public int getBonusValue(Long brandId){
+        
+        String [] brands = {"TOYOTA", "FORD", "HYUNDAI", "HONDA"};
+        List<String> brandList = Arrays.asList(brands);
         BrandEntity brand = brandService.getBrand(brandId);
-        return brand.getDiscount();
+        if (brandList.contains(brand.getBrandName())) {
+            if(brand.getBonusAmount() > 0){
+                brand.setBonusAmount(brand.getBonusAmount() -1);
+                brandService.updateBrand(brand);
+                return brand.getDiscount();
+            }
+        }
+        return 0;
     }
 
     public float getRepairValue(Long costRecordId, int typeCost, float repairDiscount, List<Float> kilometerAgeCharge, int bonusDiscount, boolean attentionDayDiscount, Long daysBetween) {
@@ -143,7 +154,7 @@ public class RepairValueService {
 
         repairValue = (repair + charges - discounts) * 1.19f;
 
-        costRecordService.setCostRecord(costRecordId, repair,repairValue, kilometerChargeValue, ageChargeValue, daysBetweenValue, repairDiscountValue, attentionDayDiscountValue, bonusDiscount);
+        costRecordService.setCostRecord(costRecordId, (float)typeCost,repairValue, kilometerChargeValue, ageChargeValue, daysBetweenValue, repairDiscountValue, attentionDayDiscountValue, bonusDiscount);
 
         repairValue = Math.round(repairValue);
 

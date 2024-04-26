@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import vicente.mieres.autofix.Entities.BrandEntity;
 import vicente.mieres.autofix.Services.BrandService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.List;
 
 @RestController
@@ -25,6 +28,11 @@ public class BrandController {
         return ResponseEntity.ok(brands);
     }
     
+    @PutMapping("/")
+    public ResponseEntity<BrandEntity> updateBrand(@RequestBody BrandEntity brand){
+        BrandEntity brandUpdated = brandService.updateBrand(brand);
+        return ResponseEntity.ok(brandUpdated);
+    }
 
 
 }

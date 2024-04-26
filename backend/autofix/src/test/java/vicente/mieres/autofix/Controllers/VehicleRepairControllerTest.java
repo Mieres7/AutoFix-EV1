@@ -1,8 +1,13 @@
 package vicente.mieres.autofix.Controllers;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mockingDetails;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -45,6 +50,20 @@ public class VehicleRepairControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newVehicleRepairJson))
                 .andExpect(status().isOk());
+
+    }
+
+    @Test 
+    public void getAll_ShouldReturnAll() throws Exception{
+        VehicleRepairEntity vr = new VehicleRepairEntity();
+        vr.setVehicleRepairId(1L);
+
+        List<VehicleRepairEntity> list = new ArrayList<>();
+        list.add(vr);
+
+        given(vehicleRepairService.getVehicleRepairs()).willReturn(list);
+        mockMvc.perform(get("/vehicleRepair/")).andExpect(status().isOk());
+
 
     }
 

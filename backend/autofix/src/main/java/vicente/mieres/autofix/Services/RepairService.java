@@ -38,12 +38,13 @@ public class RepairService {
         RepairEntity newRepair = new RepairEntity();
 
         boolean bonus = repairData.isBonus();
+        System.out.println(bonus);
     
         Long vehicleId = repairData.getVehicleId();
         VehicleEntity vehicle = vehicleService.getVehicle(vehicleId);
         String manufactureYear = vehicle.getManufactureYear();
         int mileage = vehicle.getMileage();
-        int repairs = vehicle.getRepairs();
+        int repairs = vehicle.getRepairs() + 1;
 
         LocalDateTime checkInDateTime = LocalDateTime.now();
         int vehicleAge = checkInDateTime.getYear() - Integer.parseInt(manufactureYear);
@@ -146,13 +147,13 @@ public class RepairService {
 
     public float getTotalCost(Long repairId){
 
-        System.out.println("holaohlao");
-        System.out.println(repairId);
-
-    RepairEntity repair = this.repairRepository.findById(repairId).get();
-    VehicleRepairEntity vehicleRepair = vehicleRepairService.getByRepairId(repairId);
+        
+        
+        RepairEntity repair = this.repairRepository.findById(repairId).get();
+        VehicleRepairEntity vehicleRepair = vehicleRepairService.getByRepairId(repairId);
         VehicleEntity vehicle = vehicleService.getVehicle(vehicleRepair.getVehicleId());
-
+        
+        
         String motorType = vehicle.getMotorType();
         String vehicleType = vehicle.getVehicleType();
 
@@ -168,6 +169,8 @@ public class RepairService {
         // cargo por km            
         Long ageChargeId = repair.getAgeChargeId();
         Long kilometerChargeId = repair.getKilometerChargeId();
+        System.out.println(ageChargeId);
+        System.out.println(kilometerChargeId);
         List<Float> kilometerAgeCharge = repairValueService.getKilometerAgeCharge(kilometerChargeId, ageChargeId, vehicleType);
         
         // bonus
@@ -176,7 +179,6 @@ public class RepairService {
         if(repair.isBonus()){
             bonusDiscount = repairValueService.getBonusValue(brandId);
         }
-
         // descuento por dia de ingreso lunes y jueves creo ?¿ entre 9 y 12 am
         boolean attentionDayDiscount = false;
         LocalDateTime checkInTime = repair.getCheckInDateTime();

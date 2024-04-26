@@ -21,7 +21,7 @@ public class ReportService {
     public List<CostRecordDTO> costRecordModifier(){
 
         List<Object[]> costRecordWrong = repairService.getCostRecords();
-
+        
         List<CostRecordDTO> costRecords = new ArrayList<>();
         for(Object[] costRecord : costRecordWrong){
             CostRecordDTO cr = new CostRecordDTO();
@@ -33,9 +33,10 @@ public class ReportService {
             cr.setKilometerCharge((float) costRecord[5]);
             cr.setAgeCharge((float)costRecord[6]);
             cr.setLateCharge((float)costRecord[7]);
-            cr.setAttentionDayDiscount((float)costRecord[8]);
-            cr.setBonusDiscount((float)costRecord[9]);
-            cr.setRepairCostOG((float)costRecord[10]);
+            cr.setRepairDiscount((float)costRecord[8]);
+            cr.setAttentionDayDiscount((float)costRecord[9]);
+            cr.setBonusDiscount((float)costRecord[10]);
+            cr.setRepairCostOG((float)costRecord[11]);
             costRecords.add(cr);
         }
         return costRecords;

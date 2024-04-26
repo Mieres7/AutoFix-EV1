@@ -235,8 +235,14 @@ class RepairValueServiceTest {
         BrandEntity brand = new BrandEntity();
         brand.setBrandId(1L);  
         brand.setDiscount(100);
-    
+        brand.setBrandName("TOYOTA");
+        brand.setBonusAmount(5);
+
+
+        
         when(brandService.getBrand(1L)).thenReturn(brand);
+
+
     
         int discount = repairValueService.getBonusValue(1L);
         assertEquals(100, discount);

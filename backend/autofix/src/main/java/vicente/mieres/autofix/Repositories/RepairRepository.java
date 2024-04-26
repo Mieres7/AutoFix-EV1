@@ -11,14 +11,23 @@ import vicente.mieres.autofix.Entities.RepairEntity;
 @Repository
 public interface RepairRepository extends CrudRepository<RepairEntity, Long>{
 
-    @Query(value = "SELECT cr.\"cost_record_id\", b.\"brand_name\" AS BrandName, v.\"model\" AS VehicleModel, v.\"registration\" AS Registration, " +
-                   "cr.\"repair_cost\" AS RepairCost, cr.\"kilometer_charge\" AS KilometerCharge, cr.\"age_charge\" AS AgeCharge, cr.\"late_charge\" AS LateCharge, " +
-                   "cr.\"repairs_discount\" AS RepairsDiscount, cr.\"attention_day_discount\" AS AttentionDayDiscount, cr.\"bonus_discount\" AS BonusDiscount, cr.\"repair_costog\" AS RepairCostOG " +
-                   "FROM \"cost_record\" AS cr " +
-                   "JOIN \"repair\" AS r ON cr.\"cost_record_id\" = r.\"cost_record_id\" " +
-                   "JOIN \"vehicle_repair\" AS vr ON r.\"repair_id\" = vr.\"repair_id\" " +
-                   "JOIN \"vehicle\" AS v ON vr.\"vehicle_id\" = v.\"vehicle_id\" " +
-                   "JOIN \"brand\" AS b ON v.\"brand_id\" = b.\"brand_id\"", nativeQuery = true)
+    @Query(value = "SELECT cr.cost_record_id, " +
+                   "b.brand_name AS brandName, " +
+                   "v.model AS vehicleModel, " +
+                   "v.registration AS registration, " +
+                   "cr.repair_cost AS repairCost, " +
+                   "cr.kilometer_charge AS kilometerCharge, " +
+                   "cr.age_charge AS ageCharge, " +
+                   "cr.late_charge AS lateCharge, " +
+                   "cr.repairs_discount AS repairsDiscount, " +
+                   "cr.attention_day_discount AS attentionDayDiscount, " +
+                   "cr.bonus_discount AS bonusDiscount, " +
+                   "cr.repair_costog AS repairCostOG " +
+                   "FROM cost_record cr " +
+                   "JOIN repair r ON cr.cost_record_id = r.cost_record_id " +
+                   "JOIN vehicle_repair vr ON r.repair_id = vr.repair_id " +
+                   "JOIN vehicle v ON vr.vehicle_id = v.vehicle_id " +
+                   "JOIN brand b ON v.brand_id = b.brand_id", nativeQuery = true)
     List<Object[]> getCostRecords();
 
     @Query(value = "SELECT \"RTC\".\"repair_type\" AS RepairType, " +
