@@ -8,11 +8,14 @@ pipeline{
         stage("Build JAR File"){
             steps{
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Mieres7/AutoFix-EV1-Backend']])
+                dir("backend/autofix"){
                 bat "mvn clean install"
+                }
             }
         }
         stage("Test"){
             steps{
+
                  bat "mvn test"
             }
         }
