@@ -3,6 +3,8 @@ package vicente.mieres.autofix.Repositories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class RepairRepositoryTest {
     
     @Autowired
