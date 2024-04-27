@@ -114,6 +114,7 @@ public class RepairValueService {
         String [] brands = {"TOYOTA", "FORD", "HYUNDAI", "HONDA"};
         List<String> brandList = Arrays.asList(brands);
         BrandEntity brand = brandService.getBrand(brandId);
+        System.out.println(brand.getBrandName());
         if (brandList.contains(brand.getBrandName())) {
             if(brand.getBonusAmount() > 0){
                 brand.setBonusAmount(brand.getBonusAmount() -1);

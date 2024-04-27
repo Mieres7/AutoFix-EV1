@@ -13,7 +13,6 @@ import vicente.mieres.autofix.Entities.VehicleEntity;
 
 @SpringBootTest
 @Transactional
-@ActiveProfiles("test")
 public class VehicleRepositoryTest {
 
     @Autowired

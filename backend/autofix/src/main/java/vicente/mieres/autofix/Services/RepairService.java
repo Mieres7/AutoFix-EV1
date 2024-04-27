@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class RepairService {
         int mileage = vehicle.getMileage();
         int repairs = vehicle.getRepairs() + 1;
 
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Santiago"));
         LocalDateTime checkInDateTime = LocalDateTime.now();
         int vehicleAge = checkInDateTime.getYear() - Integer.parseInt(manufactureYear);
 
@@ -58,7 +60,7 @@ public class RepairService {
             }
         }
 
-        if(repairs >= 0 && repairs <= 2)
+        if(repairs >= 1 && repairs <= 2)
             newRepair.setRepairDiscount(1L);
         else if(repairs >=3 && repairs <= 5)
             newRepair.setRepairDiscount(2L);
