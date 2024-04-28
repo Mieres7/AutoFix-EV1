@@ -2,7 +2,6 @@ package vicente.mieres.autofix.Controllers;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mockConstruction;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -20,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import vicente.mieres.autofix.DTO.CreateVehicle;
 import vicente.mieres.autofix.Entities.VehicleEntity;
-import vicente.mieres.autofix.Services.VehicleRepairService;
 import vicente.mieres.autofix.Services.VehicleService;
 
 

@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.Entities.CostRecordEntity;
 import vicente.mieres.autofix.Repositories.CostRecordRepository;
 

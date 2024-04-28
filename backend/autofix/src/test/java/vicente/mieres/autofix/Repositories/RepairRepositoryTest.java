@@ -3,13 +3,11 @@ package vicente.mieres.autofix.Repositories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.Entities.BrandEntity;
 import vicente.mieres.autofix.Entities.CostRecordEntity;
 import vicente.mieres.autofix.Entities.RepairEntity;
@@ -31,12 +29,8 @@ public class RepairRepositoryTest {
     private EntityManager entityManager;
     @Autowired
     private RepairRepository repairRepository;
-    // @Autowired
-    // private RepairService repairService;
     @Autowired
     private CostRecordRepository costRecordRepository;
-    @Autowired
-    private BrandRepository brandRepository;
     @Autowired 
     private VehicleRepository vehicleRepository;
     @Autowired
