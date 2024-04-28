@@ -11,8 +11,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.Entities.BrandEntity;
@@ -20,6 +22,7 @@ import vicente.mieres.autofix.Repositories.BrandRepository;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class BrandServiceTest {
 
     @Autowired
@@ -28,7 +31,7 @@ public class BrandServiceTest {
     private BrandRepository brandRepository;
 
     @Test
-    public void whenGetBrands__ThenAllBrands(){
+    public void whenGetBrands__ThenAllBrands() {
         BrandEntity b =  new BrandEntity();
         b.setBrandId(1L);
 

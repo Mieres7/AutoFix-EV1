@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.Entities.RepairTypeCostEntity;
@@ -18,6 +19,7 @@ import vicente.mieres.autofix.Repositories.RepairTypeCostRepository;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class RepairTypeServiceTest {
 
     @Autowired

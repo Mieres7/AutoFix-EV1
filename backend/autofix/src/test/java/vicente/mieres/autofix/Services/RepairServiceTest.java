@@ -3,8 +3,10 @@ package vicente.mieres.autofix.Services;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
@@ -36,6 +38,7 @@ import vicente.mieres.autofix.Repositories.VehicleRepository;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class RepairServiceTest {
 
     @Autowired
@@ -64,9 +67,8 @@ public class RepairServiceTest {
     private BrandService brandService;
     
     
-
     @Test
-public void whenSaveRepair_ThenSavedRepairIsCorrectV1() {
+    public void whenSaveRepair_ThenSavedRepairIsCorrectV1() {
     // Set up
     VehicleEntity vehicle = new VehicleEntity();
     vehicle.setVehicleId(1L);
@@ -583,7 +585,7 @@ public void whenGetTotalCost_thenCostIsCorrect() {
         List<RepairEntity> list = new ArrayList<>();
         list.add(r);
 
-        when(repairService.getRepairs()).thenReturn(list);
+        when(repairRepository.findAll()).thenReturn(list);
         List<RepairEntity> newList = repairService.getRepairs();
         assertThat(list).isEqualTo(newList);
     }

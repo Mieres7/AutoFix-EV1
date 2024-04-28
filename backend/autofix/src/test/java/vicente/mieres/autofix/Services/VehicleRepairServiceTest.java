@@ -9,11 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
+import jakarta.transaction.Transactional;
 import vicente.mieres.autofix.Entities.VehicleRepairEntity;
 import vicente.mieres.autofix.Repositories.VehicleRepairRepository;
 
 @SpringBootTest
+@Transactional
+@ActiveProfiles("test")
 public class VehicleRepairServiceTest {
 
     @Autowired 

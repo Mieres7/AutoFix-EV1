@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "kilometer_charge")
-
 public class KilometerChargeEntity {
 
     @Id

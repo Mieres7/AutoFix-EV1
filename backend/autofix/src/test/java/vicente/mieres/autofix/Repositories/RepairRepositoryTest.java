@@ -2,6 +2,7 @@ package vicente.mieres.autofix.Repositories;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -20,8 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 
-@SpringBootTest
-@Transactional
+// @SpringBootTest
+// @Transactional
+@DataJpaTest
 @ActiveProfiles("test")
 public class RepairRepositoryTest {
     
@@ -54,7 +56,7 @@ public class RepairRepositoryTest {
             vehicle.setBrand_id(99L);
             vehicle.setModel("Corolla");
             vehicle.setRegistration("ABCD12");
-            entityManager.merge(vehicle);
+            entityManager.persist(vehicle);
             // entityManager.flush();
 
             RepairEntity repair = new RepairEntity(); 
@@ -128,7 +130,7 @@ public class RepairRepositoryTest {
 
         List<Object[]> repairVehicleTypeProyections = repairRepository.getRepairTypeCost();
 
-        assertEquals(11, repairVehicleTypeProyections.size());
+        assertEquals(1, repairVehicleTypeProyections.size());
        
     }
 
@@ -143,18 +145,18 @@ public class RepairRepositoryTest {
         repair.setCheckInDateTime(checkIn);
         repair.setCheckOutDateTime(checkOut);
         entityManager.merge(repair);
-
+        entityManager.flush();
         VehicleEntity vehicle = new VehicleEntity();
         vehicle.setBrand_id(1L);
         vehicle.setModel("Corolla");
         vehicle.setRegistration("ABCD12");
         entityManager.merge(vehicle);
-
+        entityManager.flush();
         BrandEntity brand = new BrandEntity();  
         brand.setBrandName("TOYOTA");
         brand.setBrandId(1L);
         entityManager.merge(brand);
-
+        entityManager.flush();
         VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
         vehicleRepair.setRepairId(1L);
         vehicleRepair.setVehicleId(1L);
@@ -165,7 +167,7 @@ public class RepairRepositoryTest {
 
         List<Object[]> averageTimeProyections = repairRepository.getAverageRepairTime();
 
-            assertEquals(1, averageTimeProyections.size());
+        assertEquals(1, averageTimeProyections.size());
     }   
 
     @Test
@@ -177,19 +179,19 @@ public class RepairRepositoryTest {
         vehicle.setRegistration("ABCD12");
         vehicle.setMotorType("GASOLINE");
         entityManager.merge(vehicle);
-
+        entityManager.flush();
         RepairEntity repair = new RepairEntity(); 
         repair.setTotalCost(156000.0f);
         repair.setRepairId(1L);
     
         entityManager.merge(repair);
-
+        entityManager.flush();
         VehicleRepairEntity vehicleRepair = new VehicleRepairEntity();
         vehicleRepair.setRepairId(1L);
         vehicleRepair.setVehicleId(1L);
         vehicleRepair.setVehicleRepairId(1L);
         entityManager.merge(vehicleRepair);
-
+        entityManager.flush();
         RepairTypeCostEntity rCostEntity = new RepairTypeCostEntity();
         rCostEntity.setRepairTypeCostId(1L);
         rCostEntity.setRepairType("Breaks Repair");
@@ -199,7 +201,7 @@ public class RepairRepositoryTest {
 
         List<Object[]> repairVehicleMotorProyections = repairRepository.getRepairMotorCost();
 
-        assertEquals(11, repairVehicleMotorProyections.size());
+        assertEquals(1, repairVehicleMotorProyections.size());
         
     }
 
