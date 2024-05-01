@@ -2,6 +2,10 @@ package vicente.mieres.autofix.Controllers;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -72,5 +76,4 @@ public class VehicleControllerTest {
         mockMvc.perform(post("/vehicle/").contentType(MediaType.APPLICATION_JSON).content(crString)).andExpect(status().isOk());
 
     }
-
 }

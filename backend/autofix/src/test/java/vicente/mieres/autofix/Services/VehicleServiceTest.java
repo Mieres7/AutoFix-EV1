@@ -92,6 +92,15 @@ public class VehicleServiceTest {
         assertThat(vehicle).isEqualTo(true);
 
     }
+
+    // @Test
+    // public void whenDelete_VehicleIsDeleted(){
+    //     VehicleEntity newVehicle = new VehicleEntity();
+    //     newVehicle.setVehicleId(1L);
+    //     vehicleService.deleteVehicle(1L);
+
+    // }
+
     
 
 }

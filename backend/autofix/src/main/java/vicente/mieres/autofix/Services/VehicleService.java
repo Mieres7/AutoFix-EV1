@@ -15,6 +15,10 @@ public class VehicleService {
     @Autowired
     VehicleRepository vehicleRepository;
 
+    public void deleteVehicle(Long VehicleId){
+        vehicleRepository.deleteById(VehicleId);
+    }
+
 
     public VehicleEntity saveVehicle(CreateVehicle vehicleData) {
         VehicleEntity newVehicle = new VehicleEntity();
