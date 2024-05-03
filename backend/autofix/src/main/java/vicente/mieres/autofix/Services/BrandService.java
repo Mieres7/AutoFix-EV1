@@ -42,13 +42,13 @@ public class BrandService {
 
             brandFound.setBonus(brand.isBonus());
         }
-        if (brand.getBonusAmount()  > 0) {
+        if (brand.getBonusAmount()  >= 0) {
             brandFound.setBonusAmount(brand.getBonusAmount());
         }
         if (brand.getBrandName() != null) {
             brandFound.setBrandName(brand.getBrandName());
         }
-        if (brand.getDiscount() > 0) {
+        if (brand.getDiscount() >= 0) {
             brandFound.setDiscount(brand.getDiscount());
         }
         if (brand.getPeriod() != null) {
